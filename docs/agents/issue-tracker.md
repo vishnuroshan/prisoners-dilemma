@@ -1,11 +1,11 @@
 # Issue tracker: Backlog.md
 
-Tasks and specs for this repo live in Backlog.md under `backlog/`. Use the `backlog` CLI with `--plain` for all operations. Task IDs use the `PD` prefix (for example `PD-3`).
+Tasks and specs for this repo live in Backlog.md under `backlog/`. Use the `backlog` CLI with `--plain` for all operations. Task IDs use the `PD` prefix (for example `PD-3`). Child tasks get dotted IDs under their parent (for example `PD-1.2`).
 
 ## Conventions
 
 - **Create a task**: `backlog task create "<title>" --desc "<body>" --plain`. Add `-l <label>` for labels, `--ac "<criterion>"` (repeatable) for acceptance criteria.
-- **Spec**: a parent task whose description holds the full spec.
+- **Spec**: a parent task whose description points to the spec documents (spec file, CLAUDE.md, ADRs) rather than copying them.
 - **Implementation ticket**: a child task, `backlog task create "<title>" -p <parent-id> ...`. One task per ticket.
 - **Read a task**: `backlog task view <id> --plain`.
 - **List tasks**: `backlog task list --plain`, filtered with `-s <status>` or `-p <parent-id>`. There is no label filter; use `backlog search "<query>" --plain` or read the files under `backlog/tasks/`.
