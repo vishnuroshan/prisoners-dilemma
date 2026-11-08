@@ -8,17 +8,15 @@ afterEach(cleanup)
 const run = () => fireEvent.click(screen.getByRole('button', { name: 'Run' }))
 const shownSeed = () => screen.getByText(/^Seed: \d+$/).textContent
 
-function leaderboardRows() {
-  const table = screen.getByRole('table', { name: 'Leaderboard' })
+/** Every row of the figure's table of exact numbers, header row included. */
+function figureTableRows(name: RegExp) {
+  const table = within(screen.getByRole('figure', { name })).getByRole('table')
   return within(table)
-    .getAllByRole('row')
-    .slice(1)
-    .map((row) =>
-      within(row)
-        .getAllByRole('cell')
-        .map((cell) => cell.textContent),
-    )
+    .getAllByRole<HTMLTableRowElement>('row')
+    .map((row) => Array.from(row.cells, (cell) => cell.textContent))
 }
+
+const leaderboardRows = () => figureTableRows(/^Leaderboard/).slice(1)
 
 test('running with the defaults shows a leaderboard table ranked by score', () => {
   render(<Tournament />)
@@ -35,6 +33,18 @@ test('running with the defaults shows a leaderboard table ranked by score', () =
   expect(leaderboardRows()).toEqual([
     ['1', 'Always Defect', '1200'],
     ['2', 'Always Cooperate', '600'],
+  ])
+})
+
+test("the pairwise scores figure tabulates each row strategy's score against each column strategy", () => {
+  render(<Tournament />)
+
+  run()
+
+  expect(figureTableRows(/^Pairwise scores/)).toEqual([
+    ['', 'Always Defect', 'Always Cooperate'],
+    ['Always Defect', '200', '1000'],
+    ['Always Cooperate', '0', '600'],
   ])
 })
 

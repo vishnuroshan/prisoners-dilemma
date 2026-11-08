@@ -1,4 +1,6 @@
 import { useState, type FormEvent } from 'react'
+import { LeaderboardFigure } from './charts/LeaderboardFigure.tsx'
+import { PairwiseFigure } from './charts/PairwiseFigure.tsx'
 import { listStrategies, runTournament, type TournamentReport } from './engine'
 
 const strategies = listStrategies()
@@ -90,26 +92,8 @@ export default function Tournament() {
       {outcome && 'report' in outcome && (
         <div className="mt-4">
           <p className="font-mono">Seed: {outcome.seed}</p>
-          <table className="mt-2 border-collapse font-mono">
-            <caption className="text-left">Leaderboard</caption>
-            <thead>
-              <tr className="border-b border-ink">
-                <th className="pr-4 text-left">Rank</th>
-                <th className="pr-4 text-left">Strategy</th>
-                <th className="text-right">Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              {outcome.report.leaderboard.map(({ strategyId, name, score }, _, entries) => (
-                <tr key={strategyId}>
-                  {/* Tied scores share a rank (entries are sorted highest first). */}
-                  <td className="pr-4">{entries.findIndex((e) => e.score === score) + 1}</td>
-                  <td className="pr-4">{name}</td>
-                  <td className="text-right">{score}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <LeaderboardFigure report={outcome.report} />
+          <PairwiseFigure report={outcome.report} />
         </div>
       )}
     </>

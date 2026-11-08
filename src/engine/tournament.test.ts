@@ -50,6 +50,16 @@ describe('runTournament', () => {
     ])
   })
 
+  test("pairwise scores give each strategy's score against each opponent, itself included", () => {
+    const { pairwise } = runTournament({ strategyIds: [ALLC, ALLD], rounds: 200, seed: 1 })
+    expect(pairwise).toEqual([
+      { strategyId: ALLC, opponentId: ALLC, score: 600 },
+      { strategyId: ALLC, opponentId: ALLD, score: 0 },
+      { strategyId: ALLD, opponentId: ALLC, score: 1000 },
+      { strategyId: ALLD, opponentId: ALLD, score: 200 },
+    ])
+  })
+
   test('the same config gives an identical report', () => {
     const config = { strategyIds: [ALLC, ALLD], rounds: 137, seed: 4_294_967_295 }
     expect(runTournament(config)).toEqual(runTournament({ ...config }))
