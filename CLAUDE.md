@@ -72,17 +72,19 @@ Hidden length, drawn between 10 and 20 rounds. A hidden opponent is revealed at 
 
 ## UI rules
 
-The goal is a serious, almost bare-HTML document. Nothing that reads as AI-generated frontend.
+The goal is a serious, almost bare-HTML look with very little scrolling. Nothing that reads as AI-generated frontend.
 
-- One page with sections and a plain table of contents (`#anchor` links). No router.
-- Single prose column about 70 characters wide. Figures may be wider.
-- Fonts: system serif for text (Charter, Georgia fallback). `ui-monospace` for numbers and tables. No web fonts.
+- Three screens: Learn, Tournament, Play. Plain-text links at the top switch screens via the URL hash (`#learn`, `#tournament`, `#play`). No router library.
+- From laptop width up, each screen fits the window without page scrolling. Only long lists (strategy checkboxes, per-round table) scroll inside their own panel. On phones, screens stack and scroll.
+- Screens fill the window up to 1440px wide, with about 32px side margins. Prose lines stay about 70 characters; the matrix, charts, and play area use the remaining width.
+- The 2x2 payoff matrix is the one distinctive element: the centrepiece of Learn, the play surface in Play, and its cross of lines divides the four Tournament charts into quadrants. No boxes or cards around charts.
+- Fonts: system serif only (Charter, Georgia fallback), including tables and numbers (`font-variant-numeric: tabular-nums lining-nums`). No monospace. No web fonts.
 - Colours: text `#1A1A1A` on `#F9F9F9`. Blue and orange only, and only to encode Cooperate and Defect.
 - Data that is not a move uses a single grey ramp from the neutrals, never a new hue. Heatmap: light grey (low) to `#1A1A1A` (high). Leaderboard bars: charcoal. Outcome distribution: Mutual Cooperation blue, Mutual Defection orange, Betrayal mid-grey. Cooperation-rate line: blue.
 - Underlined links. 1px rules.
 - Tailwind v4 with default colours, shadows, radii, and fonts disabled via `@theme { --color-*: initial; … }`. Only project tokens exist.
 - Native HTML controls only: checkboxes, `<input type="number">`, `<select>`, `<button>`. No component library.
-- Charts use Nivo with `animate={false}`, styled from tokens. Each chart is a `<figure>` with a caption and a table of exact numbers.
+- Charts use Nivo with `animate={false}`, styled from tokens. Each chart is a `<figure>` with a caption and a table of exact numbers. A "Show numbers" toggle swaps the chart for its table in place; the table stays in the DOM for screen readers.
 - **Banned:** hero banners, gradients, glassmorphism, blur, glow, drop shadows, rounded cards, three-column feature grids, icon-per-item lists, emoji, purple, indigo, or neon accents, dark-mode-first styling, animated blobs, skeleton shimmer, toasts, modals, call-to-action button pairs, marketing copy, chart animation.
 - Teaching copy is drafted by Claude for the user's review. Historical claims that cannot be sourced stay as TODOs.
 
