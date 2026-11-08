@@ -68,6 +68,36 @@ test("the pairwise scores figure tabulates each row strategy's score against eac
   ])
 })
 
+test('the cooperation rate figure tabulates the rate for each round', () => {
+  render(<Tournament />)
+
+  tickOnly('Tit for Tat', 'Always Defect')
+  fireEvent.change(screen.getByRole('spinbutton', { name: 'Rounds' }), { target: { value: '3' } })
+  run()
+
+  expect(figureTableRows(/^Cooperation rate by round/)).toEqual([
+    ['Round', 'Cooperation rate'],
+    ['1', '50.0%'],
+    ['2', '33.3%'],
+    ['3', '33.3%'],
+  ])
+})
+
+test('the outcome distribution figure tabulates rounds per Outcome', () => {
+  render(<Tournament />)
+
+  tickOnly('Tit for Tat', 'Always Defect')
+  fireEvent.change(screen.getByRole('spinbutton', { name: 'Rounds' }), { target: { value: '3' } })
+  run()
+
+  expect(figureTableRows(/^Outcome distribution/)).toEqual([
+    ['Outcome', 'Rounds', 'Share'],
+    ['Mutual Cooperation', '3', '33.3%'],
+    ['Mutual Defection', '5', '55.6%'],
+    ['Betrayal', '1', '11.1%'],
+  ])
+})
+
 test('ticked strategies and rounds set the tournament', () => {
   render(<Tournament />)
 

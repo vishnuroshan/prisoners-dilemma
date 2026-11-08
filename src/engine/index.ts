@@ -9,7 +9,7 @@ export {
   type HumanRound,
   type MoveLetter,
 } from './humanMatch.ts'
-export type { LeaderboardEntry, PairwiseScore } from './metrics.ts'
+export type { LeaderboardEntry, OutcomeDistribution, PairwiseScore } from './metrics.ts'
 export { runTournament, type TournamentConfig, type TournamentReport } from './tournament.ts'
 export type { StrategyInfo } from './types.ts'
 

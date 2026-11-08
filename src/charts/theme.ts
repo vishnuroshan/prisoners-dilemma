@@ -17,6 +17,10 @@ export function grey(t: number): string {
 export const PAPER = grey(0)
 export const INK = grey(1)
 
+// Mirrors --color-cooperate and --color-defect in src/index.css. Only for data that encodes a move.
+export const COOPERATE = '#2f5d8a'
+export const DEFECT = '#b3501b'
+
 const theme: PartialTheme = {
   background: 'transparent',
   text: { fontFamily: MONO, fontSize: 12, fill: INK },

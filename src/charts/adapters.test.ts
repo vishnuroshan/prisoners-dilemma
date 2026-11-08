@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import type { TournamentReport } from '../engine'
-import { leaderboardBars, pairwiseHeatmap } from './adapters.ts'
+import { cooperationLine, leaderboardBars, outcomeBars, pairwiseHeatmap } from './adapters.ts'
 
 // Pairwise entries are in selection order; the leaderboard is in rank order.
 const report: TournamentReport = {
@@ -20,6 +20,8 @@ const report: TournamentReport = {
     { strategyId: 'c', opponentId: 'b', score: 8 },
     { strategyId: 'c', opponentId: 'c', score: 9 },
   ],
+  cooperationByRound: [1, 0.5, 0.25],
+  outcomes: { mutualCooperation: 6, mutualDefection: 2, betrayal: 1 },
 }
 
 describe('leaderboardBars', () => {
@@ -59,6 +61,31 @@ describe('pairwiseHeatmap', () => {
           { x: 'Alpha', y: 1 },
         ],
       },
+    ])
+  })
+})
+
+describe('cooperationLine', () => {
+  test('gives one series with a point per round, numbered from 1', () => {
+    expect(cooperationLine(report)).toEqual([
+      {
+        id: 'Cooperation rate',
+        data: [
+          { x: 1, y: 1 },
+          { x: 2, y: 0.5 },
+          { x: 3, y: 0.25 },
+        ],
+      },
+    ])
+  })
+})
+
+describe('outcomeBars', () => {
+  test('gives one bar per Outcome', () => {
+    expect(outcomeBars(report)).toEqual([
+      { outcome: 'Mutual Cooperation', rounds: 6 },
+      { outcome: 'Mutual Defection', rounds: 2 },
+      { outcome: 'Betrayal', rounds: 1 },
     ])
   })
 })

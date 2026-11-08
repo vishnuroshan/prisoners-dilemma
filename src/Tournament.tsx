@@ -1,5 +1,7 @@
 import { useState, type FormEvent } from 'react'
+import { CooperationFigure } from './charts/CooperationFigure.tsx'
 import { LeaderboardFigure } from './charts/LeaderboardFigure.tsx'
+import { OutcomeFigure } from './charts/OutcomeFigure.tsx'
 import { PairwiseFigure } from './charts/PairwiseFigure.tsx'
 import { listStrategies, runTournament, type TournamentReport } from './engine'
 
@@ -94,6 +96,8 @@ export default function Tournament() {
           <p className="font-mono">Seed: {outcome.seed}</p>
           <LeaderboardFigure report={outcome.report} />
           <PairwiseFigure report={outcome.report} />
+          <CooperationFigure report={outcome.report} />
+          <OutcomeFigure report={outcome.report} />
         </div>
       )}
     </>

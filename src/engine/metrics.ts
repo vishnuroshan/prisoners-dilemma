@@ -1,4 +1,4 @@
-import type { Move, Strategy } from './types.ts'
+import { COOPERATE, type Move, type Strategy } from './types.ts'
 
 /** The full record of one match. `a` and `b` index the tournament's strategy list. */
 export interface MatchRecord {
@@ -75,4 +75,39 @@ export function pairwiseScores(
       score: scores[a][b],
     })),
   )
+}
+
+/** Share of moves that were Cooperate in each round (index 0 is round 1), over both moves of every match, self-matches included. */
+export function cooperationByRound(rounds: number, matches: readonly MatchRecord[]): number[] {
+  const cooperations = new Array<number>(rounds).fill(0)
+  for (const { movesA, movesB } of matches) {
+    for (let i = 0; i < rounds; i++) {
+      if (movesA[i] === COOPERATE) cooperations[i]++
+      if (movesB[i] === COOPERATE) cooperations[i]++
+    }
+  }
+  const moves = 2 * matches.length
+  return cooperations.map((count) => count / moves)
+}
+
+/** Number of rounds that ended in each Outcome. */
+export interface OutcomeDistribution {
+  readonly mutualCooperation: number
+  readonly mutualDefection: number
+  readonly betrayal: number
+}
+
+/** Counts every round of every match once, self-matches included. */
+export function outcomeDistribution(matches: readonly MatchRecord[]): OutcomeDistribution {
+  let mutualCooperation = 0
+  let mutualDefection = 0
+  let betrayal = 0
+  for (const { movesA, movesB } of matches) {
+    for (let i = 0; i < movesA.length; i++) {
+      if (movesA[i] !== movesB[i]) betrayal++
+      else if (movesA[i] === COOPERATE) mutualCooperation++
+      else mutualDefection++
+    }
+  }
+  return { mutualCooperation, mutualDefection, betrayal }
 }

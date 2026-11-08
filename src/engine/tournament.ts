@@ -1,8 +1,11 @@
 import {
+  cooperationByRound,
   leaderboard,
+  outcomeDistribution,
   pairwiseScores,
   type LeaderboardEntry,
   type MatchRecord,
+  type OutcomeDistribution,
   type PairwiseScore,
 } from './metrics.ts'
 import { playRound, type Player, type Round } from './playRound.ts'
@@ -18,10 +21,13 @@ export interface TournamentConfig {
   readonly seed: number
 }
 
-/** Results of a tournament. The round metrics land here in a later ticket. */
+/** Results of a tournament. */
 export interface TournamentReport {
   readonly leaderboard: readonly LeaderboardEntry[]
   readonly pairwise: readonly PairwiseScore[]
+  /** Share of moves that were Cooperate in each round, from 0 to 1. Index 0 is round 1. */
+  readonly cooperationByRound: readonly number[]
+  readonly outcomes: OutcomeDistribution
 }
 
 function playMatch(a: Strategy, b: Strategy, rounds: number, rng: Rng) {
@@ -72,5 +78,7 @@ export function runTournament(config: TournamentConfig): TournamentReport {
   return {
     leaderboard: leaderboard(selected, matches),
     pairwise: pairwiseScores(selected, matches),
+    cooperationByRound: cooperationByRound(config.rounds, matches),
+    outcomes: outcomeDistribution(matches),
   }
 }

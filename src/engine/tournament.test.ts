@@ -112,6 +112,37 @@ describe('deterministic strategies in a tournament', () => {
   })
 })
 
+describe('cooperation by round', () => {
+  // Tit for Tat vs Always Defect plays C/D, then D/D. Its self-match cooperates throughout.
+  test('counts both moves of every match, self-matches included', () => {
+    const { cooperationByRound } = runTournament({
+      strategyIds: ['tit-for-tat', ALLD],
+      rounds: 3,
+      seed: 1,
+    })
+    expect(cooperationByRound).toEqual([3 / 6, 2 / 6, 2 / 6])
+  })
+
+  test('a lone Always Cooperate cooperates in every round', () => {
+    const { cooperationByRound } = runTournament({ strategyIds: [ALLC], rounds: 2, seed: 1 })
+    expect(cooperationByRound).toEqual([1, 1])
+  })
+})
+
+describe('outcome distribution', () => {
+  test('counts every round of every match once, self-matches included', () => {
+    // Tit for Tat self-match: 3 Mutual Cooperation. Tit for Tat vs Always Defect: 1 Betrayal,
+    // then 2 Mutual Defection. Always Defect self-match: 3 Mutual Defection.
+    const { outcomes } = runTournament({ strategyIds: ['tit-for-tat', ALLD], rounds: 3, seed: 1 })
+    expect(outcomes).toEqual({ mutualCooperation: 3, mutualDefection: 5, betrayal: 1 })
+  })
+
+  test('a Betrayal counts once whichever side defects', () => {
+    const { outcomes } = runTournament({ strategyIds: [ALLD, ALLC], rounds: 4, seed: 1 })
+    expect(outcomes).toEqual({ mutualCooperation: 4, mutualDefection: 4, betrayal: 4 })
+  })
+})
+
 describe('listStrategies', () => {
   test('lists every strategy as metadata only', () => {
     for (const info of listStrategies()) {

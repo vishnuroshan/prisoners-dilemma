@@ -29,3 +29,27 @@ export function pairwiseHeatmap({ leaderboard, pairwise }: TournamentReport): Pa
     })),
   }))
 }
+
+/** A `@nivo/line` serie: `x` is the round number and `y` the cooperation rate. */
+export type CooperationSerie = { id: string; data: { x: number; y: number }[] }
+
+/** One series with a point per round, numbered from 1. */
+export function cooperationLine({ cooperationByRound }: TournamentReport): CooperationSerie[] {
+  return [
+    { id: 'Cooperation rate', data: cooperationByRound.map((rate, i) => ({ x: i + 1, y: rate })) },
+  ]
+}
+
+export type OutcomeName = 'Mutual Cooperation' | 'Mutual Defection' | 'Betrayal'
+
+/** A `@nivo/bar` datum, indexed by `outcome` with the key `rounds`. */
+export type OutcomeBar = { outcome: OutcomeName; rounds: number }
+
+/** One bar per Outcome. */
+export function outcomeBars({ outcomes }: TournamentReport): OutcomeBar[] {
+  return [
+    { outcome: 'Mutual Cooperation', rounds: outcomes.mutualCooperation },
+    { outcome: 'Mutual Defection', rounds: outcomes.mutualDefection },
+    { outcome: 'Betrayal', rounds: outcomes.betrayal },
+  ]
+}
