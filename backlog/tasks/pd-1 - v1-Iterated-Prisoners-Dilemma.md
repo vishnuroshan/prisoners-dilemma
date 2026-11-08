@@ -1,9 +1,10 @@
 ---
 id: PD-1
 title: 'v1: Iterated Prisoner''s Dilemma'
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-11-08 19:18'
+updated_date: '2026-11-08 20:44'
 labels: []
 dependencies: []
 ordinal: 1000
@@ -22,3 +23,9 @@ Source of truth, in order of precedence:
 
 Deferred features (DRAFT-1 to DRAFT-7) are out of scope, but their seams must stay intact.
 <!-- SECTION:DESCRIPTION:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+v1 shipped: engine, 10 strategies, tournament dashboard with four charts, human match, teaching copy, tooling, CI, and deployment on Cloudflare Workers at https://gametheory.vishnuroshan.com/.
+<!-- SECTION:FINAL_SUMMARY:END -->

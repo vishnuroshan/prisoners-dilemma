@@ -105,7 +105,7 @@ Cloudflare Pages becomes Workers (Cloudflare's Pages docs now say "Start new pro
 ## Repo operations
 
 - Before any `gh` command, confirm `gh auth status` shows the account `vishnuroshan`.
-- After CI exists, `main` gets branch protection: PRs required, CI must pass. Workers Builds deploys every push to `main` regardless of CI, so this protection is the only gate.
+- `main` has no branch protection, by the user's choice. Workers Builds deploys every push to `main` whether or not CI passes, so run lint, typecheck, test, and build before pushing.
 
 ## Agent skills
 

@@ -1,10 +1,10 @@
 ---
 id: PD-1.11
 title: Connect Workers Builds and protect main
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-11-08 19:20'
-updated_date: '2026-11-08 20:41'
+updated_date: '2026-11-08 20:44'
 labels:
   - ready-for-human
 dependencies:
@@ -22,11 +22,18 @@ Human step: connect the GitHub repo to Cloudflare Workers Builds in the dashboar
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Pushes to main deploy via Workers Builds; other branches get preview URLs
-- [ ] #2 main requires a pull request and a passing CI check before merge
 <!-- AC:END -->
 
 ## Implementation Notes
 
 <!-- SECTION:NOTES:BEGIN -->
 Workers Builds connected by the user. Live at https://gametheory.vishnuroshan.com/ (custom domain; workers.dev URL also serves it), serving the build of a72ec07 (verified by matching asset hash). Branch protection still pending.
+
+Branch protection on main was applied, then removed at the user's request. Acceptance criterion dropped.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Workers Builds deploys main to https://gametheory.vishnuroshan.com/ (custom domain). No branch protection on main, by the user's choice.
+<!-- SECTION:FINAL_SUMMARY:END -->
