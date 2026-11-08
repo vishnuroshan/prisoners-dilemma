@@ -4,20 +4,17 @@ import { LeaderboardFigure } from './charts/LeaderboardFigure.tsx'
 import { OutcomeFigure } from './charts/OutcomeFigure.tsx'
 import { PairwiseFigure } from './charts/PairwiseFigure.tsx'
 import { listStrategies, runTournament, type TournamentReport } from './engine'
+import { randomSeed } from './randomSeed.ts'
 
 const strategies = listStrategies()
 
-type Outcome = { seed: number; report: TournamentReport } | { error: string }
-
-function randomSeed(): number {
-  return crypto.getRandomValues(new Uint32Array(1))[0]
-}
+type RunResult = { seed: number; report: TournamentReport } | { error: string }
 
 export default function Tournament() {
   const [selectedIds, setSelectedIds] = useState(() => strategies.map(({ id }) => id))
   const [rounds, setRounds] = useState('200')
   const [seed, setSeed] = useState('')
-  const [outcome, setOutcome] = useState<Outcome | null>(null)
+  const [result, setResult] = useState<RunResult | null>(null)
 
   function toggle(id: string) {
     setSelectedIds((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]))
@@ -33,10 +30,10 @@ export default function Tournament() {
         rounds: Number(rounds),
         seed: runSeed,
       })
-      setOutcome({ seed: runSeed, report })
+      setResult({ seed: runSeed, report })
     } catch (error) {
       if (!(error instanceof RangeError)) throw error
-      setOutcome({ error: error.message })
+      setResult({ error: error.message })
     }
   }
 
@@ -85,19 +82,19 @@ export default function Tournament() {
         </button>
       </form>
 
-      {outcome && 'error' in outcome && (
+      {result && 'error' in result && (
         <p role="alert" className="mt-4">
-          {outcome.error}
+          {result.error}
         </p>
       )}
 
-      {outcome && 'report' in outcome && (
+      {result && 'report' in result && (
         <div className="mt-4">
-          <p className="font-mono">Seed: {outcome.seed}</p>
-          <LeaderboardFigure report={outcome.report} />
-          <PairwiseFigure report={outcome.report} />
-          <CooperationFigure report={outcome.report} />
-          <OutcomeFigure report={outcome.report} />
+          <p className="font-mono">Seed: {result.seed}</p>
+          <LeaderboardFigure report={result.report} />
+          <PairwiseFigure report={result.report} />
+          <CooperationFigure report={result.report} />
+          <OutcomeFigure report={result.report} />
         </div>
       )}
     </>

@@ -2,7 +2,7 @@ import { ResponsiveLine } from '@nivo/line'
 import type { TournamentReport } from '../engine'
 import { cooperationLine } from './adapters.ts'
 import { Figure } from './Figure.tsx'
-import { chartDefaults, COOPERATE } from './theme.ts'
+import { chartDefaults, COOPERATE_COLOR } from './theme.ts'
 
 const MARGIN = { top: 8, right: 16, bottom: 48, left: 56 }
 
@@ -23,7 +23,7 @@ export function CooperationFigure({ report }: { report: TournamentReport }) {
           margin={MARGIN}
           xScale={{ type: 'linear', min: 1, max: 'auto' }}
           yScale={{ type: 'linear', min: 0, max: 1 }}
-          colors={COOPERATE}
+          colors={COOPERATE_COLOR}
           lineWidth={2}
           enablePoints={false}
           enableGridX={false}

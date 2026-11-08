@@ -18,8 +18,8 @@ export const PAPER = grey(0)
 export const INK = grey(1)
 
 // Mirrors --color-cooperate and --color-defect in src/index.css. Only for data that encodes a move.
-export const COOPERATE = '#2f5d8a'
-export const DEFECT = '#b3501b'
+export const COOPERATE_COLOR = '#2f5d8a'
+export const DEFECT_COLOR = '#b3501b'
 
 const theme: PartialTheme = {
   background: 'transparent',
@@ -45,3 +45,28 @@ const theme: PartialTheme = {
 
 /** Props every chart spreads: project tokens and no animation (CLAUDE.md UI rules). */
 export const chartDefaults = { theme, animate: false } as const
+
+// The left margin fits the longest strategy or Outcome name.
+const HORIZONTAL_BAR_MARGIN = { top: 8, right: 16, bottom: 32, left: 176 }
+
+/** Props the horizontal bar charts spread: one value per row, labelled inside the bar. */
+export const horizontalBarDefaults = {
+  ...chartDefaults,
+  layout: 'horizontal',
+  margin: HORIZONTAL_BAR_MARGIN,
+  padding: 0.3,
+  labelTextColor: PAPER,
+  labelSkipWidth: 40,
+  enableGridX: true,
+  enableGridY: false,
+} as const
+
+/** Height in px of a horizontal bar chart with `bars` bars of `barHeight` px each. */
+export function horizontalBarHeight(bars: number, barHeight: number): number {
+  return bars * barHeight + HORIZONTAL_BAR_MARGIN.top + HORIZONTAL_BAR_MARGIN.bottom
+}
+
+/** A horizontal Nivo bar chart draws the first datum at the bottom; this puts it on top. */
+export function topDown<T>(data: readonly T[]): T[] {
+  return data.toReversed()
+}

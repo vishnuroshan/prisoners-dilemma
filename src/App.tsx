@@ -5,7 +5,7 @@ import Play from './Play.tsx'
 import Strategies from './Strategies.tsx'
 import Tournament from './Tournament.tsx'
 
-const sections: { id: string; title: string; content?: ReactNode }[] = [
+const sections: { id: string; title: string; content: ReactNode }[] = [
   { id: 'introduction', title: 'Introduction', content: <Introduction /> },
   { id: 'payoffs', title: 'Payoffs', content: <Payoffs /> },
   { id: 'strategies', title: 'Strategies', content: <Strategies /> },

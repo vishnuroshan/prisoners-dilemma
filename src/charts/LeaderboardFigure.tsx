@@ -2,32 +2,24 @@ import { ResponsiveBar } from '@nivo/bar'
 import type { TournamentReport } from '../engine'
 import { leaderboardBars } from './adapters.ts'
 import { Figure } from './Figure.tsx'
-import { chartDefaults, INK, PAPER } from './theme.ts'
+import { horizontalBarDefaults, horizontalBarHeight, INK, topDown } from './theme.ts'
 
 const BAR_HEIGHT = 32
-const MARGIN = { top: 8, right: 16, bottom: 32, left: 176 }
 
 export function LeaderboardFigure({ report }: { report: TournamentReport }) {
   const bars = leaderboardBars(report)
   return (
     <Figure
       caption="Leaderboard: each strategy's total score across the tournament."
-      height={bars.length * BAR_HEIGHT + MARGIN.top + MARGIN.bottom}
+      height={horizontalBarHeight(bars.length, BAR_HEIGHT)}
       chart={
         <ResponsiveBar
-          {...chartDefaults}
-          // A horizontal Nivo bar chart draws the first datum at the bottom; rank 1 belongs on top.
-          data={bars.toReversed()}
+          {...horizontalBarDefaults}
+          // Rank 1 on top.
+          data={topDown(bars)}
           keys={['score']}
           indexBy="strategy"
-          layout="horizontal"
-          margin={MARGIN}
-          padding={0.3}
           colors={INK}
-          labelTextColor={PAPER}
-          labelSkipWidth={40}
-          enableGridX
-          enableGridY={false}
         />
       }
     >

@@ -6,16 +6,14 @@ import {
   type HumanMatch,
   type MoveLetter,
 } from './engine'
+import { randomSeed } from './randomSeed.ts'
 
 const strategies = listStrategies()
-const HIDDEN = ''
+// A <select> value is a string, so this option value stands for the null opponent id.
+const HIDDEN_OPTION = ''
 
 const moveNames = { C: 'Cooperate', D: 'Defect' } as const
 const moveColours = { C: 'text-cooperate', D: 'text-defect' } as const
-
-function randomSeed(): number {
-  return crypto.getRandomValues(new Uint32Array(1))[0]
-}
 
 /** Typing in a form control (the opponent select jumps by letter) must not play a move. */
 function isFormControl(target: EventTarget | null): boolean {
@@ -23,13 +21,14 @@ function isFormControl(target: EventTarget | null): boolean {
 }
 
 export default function Play() {
-  const [opponentId, setOpponentId] = useState(HIDDEN)
+  // null picks a Hidden opponent, as in HumanMatchOptions.
+  const [opponentId, setOpponentId] = useState<string | null>(null)
   const [match, setMatch] = useState<HumanMatch | null>(null)
   const playing = match !== null && !match.over
 
   function start(event: FormEvent) {
     event.preventDefault()
-    setMatch(startHumanMatch({ opponentId: opponentId || null, seed: randomSeed() }))
+    setMatch(startHumanMatch({ opponentId, seed: randomSeed() }))
   }
 
   function play(move: MoveLetter) {
@@ -54,11 +53,13 @@ export default function Play() {
         <label className="block">
           Opponent{' '}
           <select
-            value={opponentId}
-            onChange={(e) => setOpponentId(e.target.value)}
+            value={opponentId ?? HIDDEN_OPTION}
+            onChange={(e) =>
+              setOpponentId(e.target.value === HIDDEN_OPTION ? null : e.target.value)
+            }
             className="border border-ink"
           >
-            <option value={HIDDEN}>Hidden opponent</option>
+            <option value={HIDDEN_OPTION}>Hidden opponent</option>
             {strategies.map(({ id, name }) => (
               <option key={id} value={id}>
                 {name}
