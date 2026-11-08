@@ -60,6 +60,21 @@ describe('runTournament', () => {
     ])
   })
 
+  test.each([1, 2, 3, 4, 5])(
+    "each strategy's pairwise row sums to its leaderboard score with stochastic strategies (seed %i)",
+    (seed) => {
+      const { leaderboard, pairwise } = runTournament({
+        strategyIds: [ALLC, ALLD, 'random', 'joss'],
+        rounds: 50,
+        seed,
+      })
+      for (const { strategyId, score } of leaderboard) {
+        const row = pairwise.filter((cell) => cell.strategyId === strategyId)
+        expect(row.reduce((sum, cell) => sum + cell.score, 0)).toBe(score)
+      }
+    },
+  )
+
   test('the same config gives an identical report', () => {
     const config = { strategyIds: [ALLC, ALLD], rounds: 137, seed: 4_294_967_295 }
     expect(runTournament(config)).toEqual(runTournament({ ...config }))

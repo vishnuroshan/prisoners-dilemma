@@ -65,8 +65,9 @@ export function pairwiseScores(
   const scores = strategies.map(() => strategies.map(() => 0))
   for (const match of matches) {
     const [scoreA, scoreB] = matchScores(match)
-    scores[match.a][match.b] = scoreA
     scores[match.b][match.a] = scoreB
+    // In a self-match, side A counts, the same rule as the leaderboard.
+    scores[match.a][match.b] = scoreA
   }
   return strategies.flatMap(({ id }, a) =>
     strategies.map((opponent, b) => ({
