@@ -17,4 +17,4 @@ We chose this so that deferred features land as additions rather than rewrites: 
 
 - Strategies must draw randomness only from the injected `rng`. Using `Math.random` breaks seeded reproducibility.
 - Rounds per match are capped at 1–1,000 (default 200).
-- Performance budget: the default tournament (10 strategies, 200 rounds) finishes in under 50 ms on the main thread, guarded by a Vitest benchmark. A breach is the trigger for the Worker pool.
+- Performance budget: the default tournament (10 strategies, 200 rounds) finishes in under 50 ms on the main thread, guarded by a timed Vitest test (median after warm-up). A breach is the trigger for the Worker pool.

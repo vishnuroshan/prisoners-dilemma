@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-Walking skeleton: tooling, CI, and deploy config exist; the engine runs tournaments with ALLC and ALLD, and the page has a working Tournament section; other sections are headings only. Design inputs, in order of precedence:
+v1 features are built: the engine runs tournaments with all 10 strategies and human matches; the page has teaching copy (Introduction, Payoffs, Strategies), a Tournament section with all four charts and their tables, and a Play section. Design inputs, in order of precedence:
 
 1. This file (decisions made after the spec was written; it wins on conflict).
 2. `docs/adr/` (architecture decisions with rationale).
@@ -47,7 +47,7 @@ Vitest defaults to the Node environment. Component tests opt into jsdom with a `
 - Config is plain data: strategy ids, rounds (1–1,000, default 200), seed. Each run uses a fresh random seed unless the user enters one; the seed is shown with the results.
 - Internally, every match's full record is kept as two `Uint8Array`s (0 = Cooperate, 1 = Defect), and metrics are pure functions over the records. Records never cross the public interface.
 - Test strategies at the reducer seam (fixed `state` and `lastRound` in, move out). Test everything else through the four entry points. The RNG has two adapters: the seeded generator, and a fixed-sequence stub for tests.
-- Performance budget: the default tournament (10 strategies x 200 rounds) runs in under 50 ms on the main thread, guarded by a Vitest benchmark. No Web Worker until that breaks (DRAFT-6).
+- Performance budget: the default tournament (10 strategies x 200 rounds) runs in under 50 ms on the main thread, guarded by a timed Vitest test (median after warm-up). No Web Worker until that breaks (DRAFT-6).
 
 ## Game rules
 
@@ -100,7 +100,7 @@ E2E and chart testing are deferred (DRAFT-7).
 
 ## Departures from the spec
 
-Cloudflare Pages becomes Workers (Cloudflare's Pages docs now say "Start new projects with Workers"). Recharts becomes Nivo (Recharts has no heatmap). Inter or Roboto Mono becomes system fonts. Detective becomes Prober. "Recreation" becomes "inspired by".
+Cloudflare Pages becomes Workers (Cloudflare's Pages docs now say "Start new projects with Workers"). Recharts becomes Nivo (Recharts has no heatmap). Inter or Roboto Mono becomes system fonts. Detective becomes Prober. "Recreation" becomes "inspired by". The outcome distribution is a bar chart, not a pie or doughnut (three categories compare more accurately as bars).
 
 ## Repo operations
 

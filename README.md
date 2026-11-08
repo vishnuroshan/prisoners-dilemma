@@ -6,7 +6,7 @@ Live demo: TODO (added once the Cloudflare Workers deployment exists).
 
 ## The experiment
 
-In the Prisoner's Dilemma, two players each choose to Cooperate or Defect without seeing the other's choice. Each round pays (your points first, then your opponent's):
+In the Prisoner's Dilemma, two players each choose to Cooperate or Defect without seeing the other's move. Each round pays (your points first, then your opponent's):
 
 |                   | Opponent cooperates | Opponent defects |
 | ----------------- | ------------------- | ---------------- |
@@ -15,18 +15,22 @@ In the Prisoner's Dilemma, two players each choose to Cooperate or Defect withou
 
 The four payoffs are called Temptation (5), Reward (3), Punishment (1), and Sucker's payoff (0).
 
-Defecting always pays more in a single round, yet two players who both defect earn less than two who both cooperate. Repeat the game over many rounds and a player can respond to what the other did before, so cooperation can pay.
+Defecting always pays more in a single round, yet two players who both defect earn less than two who both cooperate. Over a match of many rounds a player can respond to what the other did before, so cooperation can pay.
 
-In 1980 Axelrod ran a tournament in which submitted strategies played the iterated game against each other, round-robin. Anatol Rapoport's Tit for Tat, which cooperates first and then copies the opponent's previous move, won.
+Axelrod's tournament, reported in _Effective Choice in the Prisoner's Dilemma_ (Journal of Conflict Resolution, 1980), played submitted strategies against one another.
+
+<!-- TODO(source): the 1980 tournament's format (round-robin, number of entries, match length) and its winner. Not stated until checked against Axelrod (1980). -->
+
+This project's tournaments are round-robin. Anatol Rapoport's Tit for Tat cooperates first and then copies the opponent's previous move.
 
 This project is inspired by that tournament, not a recreation of it. Some strategies here were not entries in 1980, and each strategy shows its real origin in the app.
 
 ## Features
 
-- **Tournament.** Pick any of the strategies below and a number of rounds per match (1 to 1,000, default 200). Every selected strategy plays every other one and a copy of itself. Results include a leaderboard bar chart and a pairwise heatmap, each with a table of exact numbers.
+- **Tournament.** Pick any of the strategies below and a number of rounds per match (1 to 1,000, default 200). Every selected strategy plays every other one and a copy of itself. Results include a leaderboard, a pairwise heatmap, the cooperation rate by round, and the outcome distribution, each a chart with a table of exact numbers.
 - **Seeded runs.** Each run uses a fresh random seed unless you enter one, and the seed is shown with the results. The same strategies, rounds, and seed always give the same results.
 - **Play.** Play a match against a strategy you choose, or against a hidden opponent revealed when the match ends. The match length is hidden (10 to 20 rounds). Press `C` to cooperate and `D` to defect.
-- **Planned for v1:** cooperation rate by round and outcome distribution charts, and teaching copy for the Introduction, Payoffs, and Strategies sections.
+- **Teaching copy.** The Introduction, Payoffs, and Strategies sections explain the dilemma, the payoffs, and each strategy's rule and origin.
 
 ### Strategies
 
@@ -34,7 +38,7 @@ This project is inspired by that tournament, not a recreation of it. Some strate
 | --------------------- | --------------------------------------------------- |
 | Always Cooperate      | Baseline, not an entry                              |
 | Always Defect         | Baseline, not an entry                              |
-| Tit for Tat           | Anatol Rapoport's entry, the winner                 |
+| Tit for Tat           | Anatol Rapoport's entry                             |
 | Grudger               | Friedman's entry (also known as Grim Trigger)       |
 | Tit for Two Tats      | John Maynard Smith's entry in the second tournament |
 | Pavlov                | Named in later research (Kraines and Kraines, 1989) |
