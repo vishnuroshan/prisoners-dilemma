@@ -2,7 +2,7 @@
 
 A single-page web app, inspired by Robert Axelrod's 1980 computer tournament, where strategies for the iterated Prisoner's Dilemma play each other in round-robin tournaments and you can play against them yourself.
 
-Live demo: TODO (added once the Cloudflare Workers deployment exists).
+Live demo: <https://gametheory.vishnuroshan.com/>
 
 ## The experiment
 
