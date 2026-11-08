@@ -1,23 +1,10 @@
-import { ResponsiveBar } from '@nivo/bar'
 import type { TournamentReport } from '../engine'
-import { outcomeBars, type OutcomeName } from './adapters.ts'
+import { outcomeBars } from './adapters.ts'
 import { Figure } from './Figure.tsx'
-import {
-  COOPERATE_COLOR,
-  DEFECT_COLOR,
-  grey,
-  horizontalBarDefaults,
-  horizontalBarHeight,
-  topDown,
-} from './theme.ts'
+import { OutcomeChart } from './lazyCharts.ts'
+import { horizontalBarHeight } from './theme.ts'
 
 const BAR_HEIGHT = 40
-// Betrayal mixes both moves, so it takes mid-grey from the neutral ramp (CLAUDE.md UI rules).
-const COLOURS: Record<OutcomeName, string> = {
-  'Mutual Cooperation': COOPERATE_COLOR,
-  'Mutual Defection': DEFECT_COLOR,
-  Betrayal: grey(0.5),
-}
 
 export function OutcomeFigure({ report }: { report: TournamentReport }) {
   const bars = outcomeBars(report)
@@ -26,16 +13,7 @@ export function OutcomeFigure({ report }: { report: TournamentReport }) {
     <Figure
       caption="Outcome distribution: how many rounds, across every match, ended in Mutual Cooperation, Mutual Defection, or Betrayal."
       height={horizontalBarHeight(bars.length, BAR_HEIGHT)}
-      chart={
-        <ResponsiveBar
-          {...horizontalBarDefaults}
-          // Same order as the table, top to bottom.
-          data={topDown(bars)}
-          keys={['rounds']}
-          indexBy="outcome"
-          colors={({ indexValue }) => COLOURS[indexValue as OutcomeName]}
-        />
-      }
+      chart={<OutcomeChart bars={bars} />}
     >
       <table className="mt-2 border-collapse font-mono">
         <thead>

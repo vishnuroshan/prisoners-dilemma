@@ -1,10 +1,7 @@
-import { ResponsiveLine } from '@nivo/line'
 import type { TournamentReport } from '../engine'
 import { cooperationLine } from './adapters.ts'
 import { Figure } from './Figure.tsx'
-import { chartDefaults, COOPERATE_COLOR } from './theme.ts'
-
-const MARGIN = { top: 8, right: 16, bottom: 48, left: 56 }
+import { CooperationChart } from './lazyCharts.ts'
 
 // Four decimal places: the table carries the exact numbers, which a 0.1% rounding would blur.
 function decimal(rate: number): string {
@@ -17,22 +14,7 @@ export function CooperationFigure({ report }: { report: TournamentReport }) {
     <Figure
       caption="Cooperation rate by round: the share of all moves in that round that were Cooperate, across every match, self-matches included."
       height={320}
-      chart={
-        <ResponsiveLine
-          {...chartDefaults}
-          data={series}
-          margin={MARGIN}
-          xScale={{ type: 'linear', min: 1, max: 'auto' }}
-          yScale={{ type: 'linear', min: 0, max: 1 }}
-          colors={COOPERATE_COLOR}
-          lineWidth={2}
-          enablePoints={false}
-          enableGridX={false}
-          axisBottom={{ legend: 'Round', legendOffset: 36, legendPosition: 'middle' }}
-          axisLeft={{ format: '.0%' }}
-          useMesh
-        />
-      }
+      chart={<CooperationChart series={series} />}
     >
       {/* Up to 1,000 rows, so the exact numbers sit behind a native disclosure. */}
       <details className="mt-2">

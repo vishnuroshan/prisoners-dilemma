@@ -66,6 +66,14 @@ export function horizontalBarHeight(bars: number, barHeight: number): number {
   return bars * barHeight + HORIZONTAL_BAR_MARGIN.top + HORIZONTAL_BAR_MARGIN.bottom
 }
 
+// The top margin fits the rotated column labels; the left margin fits the row labels.
+export const HEATMAP_MARGIN = { top: 120, right: 16, bottom: 8, left: 176 }
+
+/** Height in px of a heatmap with `rows` rows of `rowHeight` px each. */
+export function heatmapHeight(rows: number, rowHeight: number): number {
+  return rows * rowHeight + HEATMAP_MARGIN.top + HEATMAP_MARGIN.bottom
+}
+
 /** A horizontal Nivo bar chart draws the first datum at the bottom; this puts it on top. */
 export function topDown<T>(data: readonly T[]): T[] {
   return data.toReversed()

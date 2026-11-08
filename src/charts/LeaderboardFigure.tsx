@@ -1,8 +1,8 @@
-import { ResponsiveBar } from '@nivo/bar'
 import type { TournamentReport } from '../engine'
 import { leaderboardBars } from './adapters.ts'
 import { Figure } from './Figure.tsx'
-import { horizontalBarDefaults, horizontalBarHeight, INK, topDown } from './theme.ts'
+import { LeaderboardChart } from './lazyCharts.ts'
+import { horizontalBarHeight } from './theme.ts'
 
 const BAR_HEIGHT = 32
 
@@ -12,16 +12,7 @@ export function LeaderboardFigure({ report }: { report: TournamentReport }) {
     <Figure
       caption="Leaderboard: each strategy's total score across the tournament."
       height={horizontalBarHeight(bars.length, BAR_HEIGHT)}
-      chart={
-        <ResponsiveBar
-          {...horizontalBarDefaults}
-          // Rank 1 on top.
-          data={topDown(bars)}
-          keys={['score']}
-          indexBy="strategy"
-          colors={INK}
-        />
-      }
+      chart={<LeaderboardChart bars={bars} />}
     >
       <table className="mt-2 border-collapse font-mono">
         <thead>
