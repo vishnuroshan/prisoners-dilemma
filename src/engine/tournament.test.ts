@@ -85,21 +85,41 @@ describe('runTournament rejects an invalid config with a RangeError', () => {
   })
 })
 
+describe('deterministic strategies in a tournament', () => {
+  test('Tit for Tat loses only the first round to Always Defect over 200 rounds', () => {
+    expect(matchScore('tit-for-tat', ALLD, 200)).toBe(199)
+    expect(matchScore(ALLD, 'tit-for-tat', 200)).toBe(204)
+  })
+
+  test('Prober exploits Always Cooperate after its probe', () => {
+    expect(matchScore('prober', ALLC, 200)).toBe(3 + 5 + 3 + 3 + 196 * 5)
+  })
+
+  test('Grudger, Tit for Two Tats, and Pavlov cooperate throughout with Tit for Tat', () => {
+    for (const id of ['grudger', 'tit-for-two-tats', 'pavlov']) {
+      expect(matchScore(id, 'tit-for-tat', 200)).toBe(600)
+    }
+  })
+})
+
 describe('listStrategies', () => {
-  test('lists Always Cooperate and Always Defect as metadata only', () => {
-    expect(listStrategies()).toEqual([
-      {
-        id: 'always-cooperate',
-        name: 'Always Cooperate',
-        origin: expect.any(String),
-        description: expect.any(String),
-      },
-      {
-        id: 'always-defect',
-        name: 'Always Defect',
-        origin: expect.any(String),
-        description: expect.any(String),
-      },
-    ])
+  test('lists every strategy as metadata only', () => {
+    for (const info of listStrategies()) {
+      expect(Object.keys(info).sort()).toEqual(['description', 'id', 'name', 'origin'])
+    }
+  })
+
+  test('lists the deterministic strategies', () => {
+    expect(listStrategies().map(({ id }) => id)).toEqual(
+      expect.arrayContaining([
+        ALLC,
+        ALLD,
+        'tit-for-tat',
+        'grudger',
+        'tit-for-two-tats',
+        'pavlov',
+        'prober',
+      ]),
+    )
   })
 })
