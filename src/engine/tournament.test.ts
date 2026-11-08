@@ -109,17 +109,34 @@ describe('listStrategies', () => {
     }
   })
 
-  test('lists the deterministic strategies', () => {
-    expect(listStrategies().map(({ id }) => id)).toEqual(
-      expect.arrayContaining([
-        ALLC,
-        ALLD,
-        'tit-for-tat',
-        'grudger',
-        'tit-for-two-tats',
-        'pavlov',
-        'prober',
-      ]),
-    )
+  test('lists every strategy in registry order', () => {
+    expect(listStrategies().map(({ id }) => id)).toEqual([
+      ALLC,
+      ALLD,
+      'tit-for-tat',
+      'grudger',
+      'tit-for-two-tats',
+      'pavlov',
+      'prober',
+      'random',
+      'joss',
+      'forgiving-tit-for-tat',
+    ])
+  })
+})
+
+describe('stochastic strategies', () => {
+  const config = {
+    strategyIds: [ALLC, ALLD, 'random', 'joss', 'forgiving-tit-for-tat'],
+    rounds: 200,
+    seed: 7,
+  }
+
+  test('the same seed gives an identical report', () => {
+    expect(runTournament(config)).toEqual(runTournament({ ...config }))
+  })
+
+  test('a different seed changes the report', () => {
+    expect(runTournament({ ...config, seed: 8 })).not.toEqual(runTournament(config))
   })
 })
