@@ -38,7 +38,7 @@ function announcement(match: HumanMatch | null): string {
 
 function Square({ move }: { move: MoveLetter }) {
   return (
-    <span className={`grid size-5 place-items-center text-xs text-paper ${squareColours[move]}`}>
+    <span className={`grid size-6 place-items-center text-sm text-paper ${squareColours[move]}`}>
       {move}
     </span>
   )
@@ -50,11 +50,11 @@ function History({ rounds }: { rounds: readonly HumanRound[] }) {
     <div>
       <p id="history-label">History</p>
       <div className="mt-1 flex gap-2">
-        <div aria-hidden="true" className="grid grid-rows-2 gap-0.5 text-xs text-muted">
-          <span className="leading-5">You</span>
-          <span className="leading-5">Opponent</span>
+        <div aria-hidden="true" className="grid grid-rows-2 gap-0.5 text-sm text-muted">
+          <span className="leading-6">You</span>
+          <span className="leading-6">Opponent</span>
         </div>
-        <ol aria-labelledby="history-label" className="flex min-h-10.5 flex-wrap gap-0.5">
+        <ol aria-labelledby="history-label" className="flex min-h-12.5 flex-wrap gap-0.5">
           {rounds.map((round, i) => (
             <li key={i}>
               <span aria-hidden="true" className="grid grid-rows-2 gap-0.5">
@@ -70,7 +70,7 @@ function History({ rounds }: { rounds: readonly HumanRound[] }) {
   )
 }
 
-const buttonClass = 'border px-3 py-1 disabled:border-muted disabled:text-muted'
+const buttonClass = 'border px-5 py-2 text-lg disabled:border-muted disabled:text-muted'
 
 export default function Play({ active }: { active: boolean }) {
   // null picks a Hidden opponent, as in HumanMatchOptions.
@@ -138,38 +138,44 @@ export default function Play({ active }: { active: boolean }) {
         )}
       </div>
 
-      <div className="flex min-w-0 flex-col gap-6">
-        <p className="text-xl">
-          {match
-            ? `You ${match.humanScore} / Opponent ${match.opponentScore}`
-            : 'Start a match to play.'}
-        </p>
+      {/* Matrix and controls side by side from lg up, history full width below, centred in the screen. */}
+      <div className="grid min-w-0 content-center gap-x-16 gap-y-8 lg:grid-cols-[auto_minmax(0,1fr)]">
         <PayoffMatrix
           highlighted={last ? `${last.human}${last.opponent}` : null}
           highlightLabel="last round"
+          large
         />
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <button
-            type="button"
-            disabled={!playing}
-            aria-keyshortcuts="C"
-            onClick={() => play('C')}
-            className={`${buttonClass} border-cooperate text-cooperate`}
-          >
-            Cooperate (C)
-          </button>
-          <button
-            type="button"
-            disabled={!playing}
-            aria-keyshortcuts="D"
-            onClick={() => play('D')}
-            className={`${buttonClass} border-defect text-defect`}
-          >
-            Defect (D)
-          </button>
+        <div className="flex flex-col justify-center gap-6">
+          <p className="text-xl">
+            {match
+              ? `You ${match.humanScore} / Opponent ${match.opponentScore}`
+              : 'Start a match to play.'}
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              disabled={!playing}
+              aria-keyshortcuts="C"
+              onClick={() => play('C')}
+              className={`${buttonClass} border-cooperate text-cooperate`}
+            >
+              Cooperate (C)
+            </button>
+            <button
+              type="button"
+              disabled={!playing}
+              aria-keyshortcuts="D"
+              onClick={() => play('D')}
+              className={`${buttonClass} border-defect text-defect`}
+            >
+              Defect (D)
+            </button>
+          </div>
           <span className="text-sm text-muted">Keys: C cooperates, D defects.</span>
         </div>
-        <History rounds={match?.rounds ?? []} />
+        <div className="lg:col-span-2">
+          <History rounds={match?.rounds ?? []} />
+        </div>
       </div>
       <p role="status" className="sr-only">
         {announcement(match)}

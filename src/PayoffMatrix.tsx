@@ -29,10 +29,13 @@ interface PayoffMatrixProps {
   highlightLabel?: string
   /** When set, cells take keyboard focus and report hover and focus (null on leaving). */
   onExplore?: (pair: MovePair | null) => void
+  /** Set the cells larger, for the Play screen where the matrix is the play surface. */
+  large?: boolean
 }
 
 /** The 2x2 payoff matrix: your moves as rows, theirs as columns, each cell "yours, theirs". */
-export function PayoffMatrix({ highlighted, highlightLabel, onExplore }: PayoffMatrixProps) {
+export function PayoffMatrix({ highlighted, highlightLabel, onExplore, large }: PayoffMatrixProps) {
+  const cellSize = large ? 'py-8 text-hero' : 'py-6 text-display'
   const explore = (pair: MovePair | null) => onExplore && (() => onExplore(pair))
   return (
     <table className="w-fit border-collapse">
@@ -67,7 +70,7 @@ export function PayoffMatrix({ highlighted, highlightLabel, onExplore }: PayoffM
                   onFocus={explore(pair)}
                   onBlur={explore(null)}
                   // A fixed width keeps the bold marked cell from shifting the columns.
-                  className={`w-[3.5em] px-2 py-6 text-center text-display whitespace-nowrap transition-colors -outline-offset-4 motion-reduce:transition-none sm:w-[4em] ${
+                  className={`w-[3.5em] px-2 ${cellSize} text-center whitespace-nowrap transition-colors -outline-offset-4 motion-reduce:transition-none sm:w-[4em] ${
                     column === 0 ? 'border-r border-ink' : ''
                   } ${row === 0 ? 'border-b border-ink' : ''} ${marked ? 'bg-mark font-bold' : ''}`}
                 >

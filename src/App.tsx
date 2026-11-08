@@ -6,7 +6,7 @@ import Tournament from './Tournament.tsx'
 const SITE_TITLE = 'Iterated Prisoner’s Dilemma'
 
 const screens = [
-  { id: 'learn', name: 'Learn', heading: 'How the game works' },
+  { id: 'learn', name: 'Learn', heading: 'Learn the game' },
   { id: 'tournament', name: 'Tournament', heading: 'Run a tournament' },
   { id: 'play', name: 'Play', heading: 'Play a match' },
 ] as const

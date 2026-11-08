@@ -38,6 +38,9 @@
   --text-xl--line-height: 2.25rem;
   --text-display: clamp(2rem, 3.4vw, 3.25rem);
   --text-display--line-height: 1;
+  /* The Play matrix is the play surface, so it is set larger than on Learn. */
+  --text-hero: clamp(2.5rem, 4.6vw, 4.5rem);
+  --text-hero--line-height: 1;
 
   --container-text: 70ch;
   --container-page: 90rem;
