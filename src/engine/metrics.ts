@@ -49,3 +49,30 @@ export function leaderboard(
     .map(({ id, name }, i) => ({ strategyId: id, name, score: totals[i] }))
     .sort((x, y) => y.score - x.score)
 }
+
+export interface PairwiseScore {
+  readonly strategyId: string
+  readonly opponentId: string
+  /** The strategy's score in its match against the opponent. */
+  readonly score: number
+}
+
+/** Every strategy's score against every opponent, itself included, in selection order. */
+export function pairwiseScores(
+  strategies: readonly Strategy[],
+  matches: readonly MatchRecord[],
+): PairwiseScore[] {
+  const scores = strategies.map(() => strategies.map(() => 0))
+  for (const match of matches) {
+    const [scoreA, scoreB] = matchScores(match)
+    scores[match.a][match.b] = scoreA
+    scores[match.b][match.a] = scoreB
+  }
+  return strategies.flatMap(({ id }, a) =>
+    strategies.map((opponent, b) => ({
+      strategyId: id,
+      opponentId: opponent.id,
+      score: scores[a][b],
+    })),
+  )
+}

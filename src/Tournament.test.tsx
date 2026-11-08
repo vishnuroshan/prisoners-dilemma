@@ -8,17 +8,15 @@ afterEach(cleanup)
 const run = () => fireEvent.click(screen.getByRole('button', { name: 'Run' }))
 const shownSeed = () => screen.getByText(/^Seed: \d+$/).textContent
 
-function leaderboardRows() {
-  const table = screen.getByRole('table', { name: 'Leaderboard' })
+/** Every row of the figure's table of exact numbers, header row included. */
+function figureTableRows(name: RegExp) {
+  const table = within(screen.getByRole('figure', { name })).getByRole('table')
   return within(table)
-    .getAllByRole('row')
-    .slice(1)
-    .map((row) =>
-      within(row)
-        .getAllByRole('cell')
-        .map((cell) => cell.textContent),
-    )
+    .getAllByRole<HTMLTableRowElement>('row')
+    .map((row) => Array.from(row.cells, (cell) => cell.textContent))
 }
+
+const leaderboardRows = () => figureTableRows(/^Leaderboard/).slice(1)
 
 /** Leaves only the named strategies ticked. */
 function tickOnly(...names: string[]) {
@@ -55,6 +53,19 @@ test('offers the deterministic strategies', () => {
   for (const name of ['Tit for Tat', 'Grudger', 'Tit for Two Tats', 'Pavlov', 'Prober']) {
     expect(screen.getByRole('checkbox', { name })).toBeDefined()
   }
+})
+
+test("the pairwise scores figure tabulates each row strategy's score against each column strategy", () => {
+  render(<Tournament />)
+
+  tickOnly('Always Cooperate', 'Always Defect')
+  run()
+
+  expect(figureTableRows(/^Pairwise scores/)).toEqual([
+    ['', 'Always Defect', 'Always Cooperate'],
+    ['Always Defect', '200', '1000'],
+    ['Always Cooperate', '0', '600'],
+  ])
 })
 
 test('ticked strategies and rounds set the tournament', () => {

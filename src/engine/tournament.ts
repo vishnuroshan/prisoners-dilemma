@@ -1,4 +1,10 @@
-import { leaderboard, type LeaderboardEntry, type MatchRecord } from './metrics.ts'
+import {
+  leaderboard,
+  pairwiseScores,
+  type LeaderboardEntry,
+  type MatchRecord,
+  type PairwiseScore,
+} from './metrics.ts'
 import { playRound, type Player, type Round } from './playRound.ts'
 import { matchSeed, seededRng } from './rng.ts'
 import { strategies } from './strategies.ts'
@@ -12,9 +18,10 @@ export interface TournamentConfig {
   readonly seed: number
 }
 
-/** Results of a tournament. Pairwise scores and the round metrics land here in later tickets. */
+/** Results of a tournament. The round metrics land here in a later ticket. */
 export interface TournamentReport {
   readonly leaderboard: readonly LeaderboardEntry[]
+  readonly pairwise: readonly PairwiseScore[]
 }
 
 function playMatch(a: Strategy, b: Strategy, rounds: number, rng: Rng) {
@@ -62,5 +69,8 @@ export function runTournament(config: TournamentConfig): TournamentReport {
       matches.push({ a, b, ...playMatch(selected[a], selected[b], config.rounds, rng) })
     }
   }
-  return { leaderboard: leaderboard(selected, matches) }
+  return {
+    leaderboard: leaderboard(selected, matches),
+    pairwise: pairwiseScores(selected, matches),
+  }
 }

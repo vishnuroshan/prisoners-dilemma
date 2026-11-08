@@ -1,9 +1,10 @@
 ---
 id: PD-1.10
 title: README and CONTRIBUTING
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-11-08 19:20'
+updated_date: '2026-11-08 20:00'
 labels:
   - ready-for-agent
 dependencies:
@@ -20,7 +21,13 @@ Developer and visitor documentation per spec section 11.1, updated for decisions
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 README covers description, features, stack, local setup (pnpm install, pnpm dev, pnpm test)
-- [ ] #2 README live demo link is a TODO until deployment exists
-- [ ] #3 CONTRIBUTING explains how to add a strategy, with a short reducer example and the rng rule
+- [x] #1 README covers description, features, stack, local setup (pnpm install, pnpm dev, pnpm test)
+- [x] #2 README live demo link is a TODO until deployment exists
+- [x] #3 CONTRIBUTING explains how to add a strategy, with a short reducer example and the rng rule
 <!-- AC:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Rewrote README.md for visitors and developers: the experiment, payoff matrix, features, strategy list with origins, stack, local setup and commands, and a TODO live demo link. Added CONTRIBUTING.md covering checks, engine rules, and adding a strategy through the reducer interface with Tit for Tat and Grudger examples, the rng rule, registration, and reducer-seam tests. Docs only; no source changes.
+<!-- SECTION:FINAL_SUMMARY:END -->
