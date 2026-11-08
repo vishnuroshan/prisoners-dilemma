@@ -2,6 +2,8 @@
 
 A single-page web app, inspired by Robert Axelrod's 1980 computer tournament, where strategies for the iterated Prisoner's Dilemma play each other in round-robin tournaments and you can play against them yourself.
 
+This site was inspired by [Veritasium's video on game theory and the prisoner's dilemma](https://www.youtube.com/watch?v=mScpHTIi-kM).
+
 Live demo: <https://gametheory.vishnuroshan.com/>
 
 ## The experiment

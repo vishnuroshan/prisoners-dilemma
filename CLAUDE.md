@@ -80,13 +80,25 @@ The goal is a serious, almost bare-HTML look with very little scrolling. Nothing
 - The 2x2 payoff matrix is the one distinctive element: the centrepiece of Learn, the play surface in Play, and its cross of lines divides the four Tournament charts into quadrants. No boxes or cards around charts.
 - Fonts: system serif only (Charter, Georgia fallback), including tables and numbers (`font-variant-numeric: tabular-nums lining-nums`). No monospace. No web fonts.
 - Colours: text `#1A1A1A` on `#F9F9F9`. Blue and orange only, and only to encode Cooperate and Defect.
-- Data that is not a move uses a single grey ramp from the neutrals, never a new hue. Heatmap: light grey (low) to `#1A1A1A` (high). Leaderboard bars: charcoal. Outcome distribution: Mutual Cooperation blue, Mutual Defection orange, Betrayal mid-grey. Cooperation-rate line: blue.
+- Data that is not a move uses a single grey ramp from the neutrals, never a new hue. Heatmap: mid-grey (low, kept at 3:1 against the page) to `#1A1A1A` (high). Leaderboard bars: charcoal. Outcome distribution: Mutual Cooperation blue, Mutual Defection orange, Betrayal mid-grey. Cooperation-rate line: blue.
 - Underlined links. 1px rules.
 - Tailwind v4 with default colours, shadows, radii, and fonts disabled via `@theme { --color-*: initial; … }`. Only project tokens exist.
 - Native HTML controls only: checkboxes, `<input type="number">`, `<select>`, `<button>`. No component library.
 - Charts use Nivo with `animate={false}`, styled from tokens. Each chart is a `<figure>` with a caption and a table of exact numbers. A "Show numbers" toggle swaps the chart for its table in place; the table stays in the DOM for screen readers.
 - **Banned:** hero banners, gradients, glassmorphism, blur, glow, drop shadows, rounded cards, three-column feature grids, icon-per-item lists, emoji, purple, indigo, or neon accents, dark-mode-first styling, animated blobs, skeleton shimmer, toasts, modals, call-to-action button pairs, marketing copy, chart animation.
 - Teaching copy is drafted by Claude for the user's review. Historical claims that cannot be sourced stay as TODOs.
+
+### Accessibility (WCAG 2.2 AA)
+
+- Landmarks: header, nav, main, footer; one h1 (the site title); each screen has an h2; a "Skip to content" link is the first focusable element.
+- Screen switching: the current nav link has `aria-current="page"`; a hash change updates `document.title` and moves focus to the screen's h2 (`tabindex="-1"`), except on first load.
+- Matrix: a real `<table>` with caption and `th` scopes; explanations show on hover and keyboard focus (cells focusable only on Learn) in a polite live region; the marked cell uses weight plus screen-reader text, never colour alone.
+- Play: a polite live region announces each round, the match end, and the reveal; C/D shortcuts ignore inputs, selects, and textareas and are documented next to the buttons; history squares carry a letter plus a text list.
+- Tournament: "Show numbers" is a `<button aria-pressed>`; charts are `aria-hidden` with the table as the equivalent; a polite status announces each finished run; controls have visible labels; strategy checkboxes sit in a `<fieldset>` with `<legend>`.
+- Contrast: text 4.5:1; focus rings, matrix lines, and chart marks carrying meaning 3:1 against the page.
+- Targets at least 24x24 CSS px; visible, unobscured focus on everything.
+- Reflow: at 200% zoom or 320px wide, screens stack and scroll with no horizontal scrolling; the no-scroll layout never clips content.
+- `prefers-reduced-motion` is respected; the only motion is the matrix cell highlight.
 
 ## Testing
 
@@ -141,6 +153,7 @@ This project uses Backlog.md MCP for all task and project management activities.
 - **When to read it**: BEFORE creating tasks, or when you're unsure whether to track work
 
 These guides cover:
+
 - Decision framework for when to create tasks
 - Search-first workflow to avoid duplicates
 - Links to detailed guides for task creation, execution, and finalization
