@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-Pre-implementation. No source code, `package.json`, or tooling exists yet. Design inputs, in order of precedence:
+Walking skeleton: tooling, CI, and deploy config exist; the page shows section headings only and `src/engine/index.ts` is empty. Design inputs, in order of precedence:
 
 1. This file (decisions made after the spec was written; it wins on conflict).
 2. `docs/adr/` (architecture decisions with rationale).
@@ -17,12 +17,22 @@ Deferred features are Backlog drafts DRAFT-1 to DRAFT-7. Do not build them, but 
 
 React, TypeScript, Vite, pnpm, Vitest, Tailwind v4, Nivo (charts), ESLint (flat config), Prettier, GitHub Actions CI. Hosted on Cloudflare Workers (static assets only) via Workers Builds Git integration.
 
-## Planned commands (not yet wired up)
+## Commands
 
-- `pnpm install`, `pnpm run dev`, `pnpm test`
-- Single test file: `pnpm vitest run path/to/file.test.ts`; filter by name with `-t "<name>"`
+- `pnpm install`: install dependencies.
+- `pnpm dev`: Vite dev server.
+- `pnpm build`: type-check, then build static output to `dist/`.
+- `pnpm preview`: serve the built `dist/` locally.
+- `pnpm lint`: ESLint (flat config in `eslint.config.js`).
+- `pnpm typecheck`: `tsc -b` across the app and Node tsconfigs.
+- `pnpm test`: run all Vitest tests once.
+- Single test file: `pnpm vitest run src/App.test.tsx`. Filter by test name: `pnpm vitest run -t "<name>"`.
+- Format only the files you touched: `pnpm prettier --write <path> [<path> ...]`. There is no repo-wide format script.
+- Validate the Workers config without deploying: `pnpm build && pnpm wrangler deploy --dry-run`.
 
-Replace this section with the real scripts once tooling exists.
+CI (`.github/workflows/ci.yml`) runs lint, typecheck, test, and build on every push and pull request.
+
+Vitest defaults to the Node environment. Component tests opt into jsdom with a `// @vitest-environment jsdom` comment on line 1. `eslint.config.test.ts` guards the engine import rule.
 
 ## Engine architecture (see ADR 0001)
 

@@ -1,0 +1,5 @@
+dist
+.wrangler
+pnpm-lock.yaml
+backlog
+specs

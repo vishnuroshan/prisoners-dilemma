@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Static assets only: no `main`, so no Worker script runs.
+  "name": "prisoners-dilemma",
+  "compatibility_date": "2026-11-09",
+  "assets": {
+    "directory": "./dist",
+  },
+}
