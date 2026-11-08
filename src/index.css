@@ -13,6 +13,9 @@
 
   --color-ink: #1a1a1a;
   --color-paper: #f9f9f9;
+  /* Blue and orange encode Cooperate and Defect only. Both pass WCAG AA (4.5:1) as text on paper. */
+  --color-cooperate: #2f5d8a;
+  --color-defect: #b3501b;
 
   --font-serif: Charter, Georgia, serif;
   --font-mono: ui-monospace, monospace;
