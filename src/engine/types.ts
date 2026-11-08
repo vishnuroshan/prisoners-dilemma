@@ -40,4 +40,9 @@ export interface Strategy<S extends StrategyState = StrategyState> {
   decide(state: S, lastRound: LastRound | null, rng: Rng): Decision<S>
 }
 
+/** A strategy's metadata for display: everything but its reducer and initial state. */
 export type StrategyInfo = Pick<Strategy, 'id' | 'name' | 'origin' | 'description'>
+
+export function strategyInfo({ id, name, origin, description }: Strategy): StrategyInfo {
+  return { id, name, origin, description }
+}

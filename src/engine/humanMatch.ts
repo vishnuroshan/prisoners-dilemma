@@ -5,20 +5,23 @@ import { strategies } from './strategies.ts'
 import {
   COOPERATE,
   DEFECT,
+  strategyInfo,
   type Move,
-  type Strategy,
   type StrategyInfo,
   type StrategyState,
 } from './types.ts'
+import { assertKnownStrategy, assertSeed } from './validation.ts'
 
 /** A move as the UI sees it: Cooperate or Defect. */
 export type MoveLetter = 'C' | 'D'
 
+/** One played round of a human match: the Human's move and the opponent's. */
 export interface HumanRound {
   readonly human: MoveLetter
   readonly opponent: MoveLetter
 }
 
+/** How to start a human match: the opponent and the seed. */
 export interface HumanMatchOptions {
   /** The opponent's strategy id, or null for a Hidden opponent. */
   readonly opponentId: string | null
@@ -28,7 +31,9 @@ export interface HumanMatchOptions {
 
 /**
  * A human match in progress. Plain serializable data. The match length and a Hidden
- * opponent's identity are derived from the seed, never stored, so they stay out of the data.
+ * opponent's identity are derived from the stored `seed`, and `opponentState` is that
+ * opponent's state, so the data does not keep them secret. The UI does not expose them
+ * until the match ends.
  */
 export interface HumanMatch extends HumanMatchOptions {
   readonly opponentState: StrategyState
@@ -42,15 +47,10 @@ export interface HumanMatch extends HumanMatchOptions {
 
 const MIN_ROUNDS = 10
 const MAX_ROUNDS = 20
-const MAX_SEED = 2 ** 32 - 1
 
 function validate({ opponentId, seed }: HumanMatchOptions): void {
-  if (opponentId !== null && !strategies.some((s) => s.id === opponentId)) {
-    throw new RangeError(`Unknown strategy id: ${opponentId}`)
-  }
-  if (!Number.isInteger(seed) || seed < 0 || seed > MAX_SEED) {
-    throw new RangeError('Seed must be a whole number from 0 to 4,294,967,295.')
-  }
+  if (opponentId !== null) assertKnownStrategy(opponentId)
+  assertSeed(seed)
 }
 
 /** The match's hidden draws: its length, then the Hidden opponent (used only when none is chosen). */
@@ -60,10 +60,6 @@ function secrets({ opponentId, seed }: HumanMatchOptions) {
   const hidden = strategies[Math.floor(rng() * strategies.length)]
   const opponent = opponentId === null ? hidden : strategies.find((s) => s.id === opponentId)!
   return { length, opponent }
-}
-
-function info({ id, name, origin, description }: Strategy): StrategyInfo {
-  return { id, name, origin, description }
 }
 
 const toMove = (letter: MoveLetter): Move => (letter === 'C' ? COOPERATE : DEFECT)
@@ -81,7 +77,7 @@ export function startHumanMatch(options: HumanMatchOptions): HumanMatch {
     humanScore: 0,
     opponentScore: 0,
     over: false,
-    opponent: options.opponentId === null ? null : info(opponent),
+    opponent: options.opponentId === null ? null : strategyInfo(opponent),
   }
 }
 
@@ -110,6 +106,6 @@ export function playHumanMove(match: HumanMatch, letter: MoveLetter): HumanMatch
     humanScore: match.humanScore + payoff(result.round.a, result.round.b),
     opponentScore: match.opponentScore + payoff(result.round.b, result.round.a),
     over,
-    opponent: over ? info(opponent) : match.opponent,
+    opponent: over ? strategyInfo(opponent) : match.opponent,
   }
 }

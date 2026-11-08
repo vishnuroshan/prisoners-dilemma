@@ -1,8 +1,8 @@
 import type { Move, Rng, Strategy, StrategyState } from './types.ts'
 
 /**
- * One side of a match. A strategy plays through its reducer; the human (PD-1.3) can
- * play as a player whose `decide` returns the move they chose.
+ * One side of a match. A strategy plays through its reducer; the Human plays as a
+ * player whose `decide` returns the move they chose.
  */
 export interface Player {
   readonly decide: Strategy['decide']

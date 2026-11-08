@@ -12,8 +12,11 @@ import { playRound, type Player, type Round } from './playRound.ts'
 import { matchSeed, seededRng } from './rng.ts'
 import { strategies } from './strategies.ts'
 import type { Rng, Strategy } from './types.ts'
+import { assertKnownStrategy, assertSeed } from './validation.ts'
 
+/** What to play: which strategies, how many rounds per match, and the seed. */
 export interface TournamentConfig {
+  /** Ids from `listStrategies()`, each at most once, at least one. Order does not change the report. */
   readonly strategyIds: readonly string[]
   /** Rounds per match, 1 to 1,000. */
   readonly rounds: number
@@ -48,20 +51,17 @@ function playMatch(a: Strategy, b: Strategy, rounds: number, rng: Rng) {
 }
 
 const MAX_ROUNDS = 1000
-const MAX_SEED = 2 ** 32 - 1
 
 function validate({ strategyIds, rounds, seed }: TournamentConfig): void {
   if (strategyIds.length === 0) throw new RangeError('Select at least one strategy.')
   for (const [i, id] of strategyIds.entries()) {
-    if (!strategies.some((s) => s.id === id)) throw new RangeError(`Unknown strategy id: ${id}`)
+    assertKnownStrategy(id)
     if (strategyIds.indexOf(id) !== i) throw new RangeError(`Duplicate strategy id: ${id}`)
   }
   if (!Number.isInteger(rounds) || rounds < 1 || rounds > MAX_ROUNDS) {
     throw new RangeError('Rounds must be a whole number from 1 to 1,000.')
   }
-  if (!Number.isInteger(seed) || seed < 0 || seed > MAX_SEED) {
-    throw new RangeError('Seed must be a whole number from 0 to 4,294,967,295.')
-  }
+  assertSeed(seed)
 }
 
 /** Plays every selected strategy against every other one and itself. Throws a RangeError on an invalid config. */

@@ -1,5 +1,5 @@
 import { strategies } from './strategies.ts'
-import type { StrategyInfo } from './types.ts'
+import { strategyInfo, type StrategyInfo } from './types.ts'
 
 export {
   playHumanMove,
@@ -15,5 +15,5 @@ export type { StrategyInfo } from './types.ts'
 
 /** Every available strategy's metadata, without its reducer. */
 export function listStrategies(): StrategyInfo[] {
-  return strategies.map(({ id, name, origin, description }) => ({ id, name, origin, description }))
+  return strategies.map(strategyInfo)
 }

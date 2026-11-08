@@ -8,6 +8,7 @@ export interface MatchRecord {
   readonly movesB: Uint8Array
 }
 
+/** One strategy's total score across the tournament. */
 export interface LeaderboardEntry {
   readonly strategyId: string
   readonly name: string
@@ -50,6 +51,7 @@ export function leaderboard(
     .sort((x, y) => y.score - x.score)
 }
 
+/** One heatmap cell: a strategy's score in its match against one opponent. */
 export interface PairwiseScore {
   readonly strategyId: string
   readonly opponentId: string
