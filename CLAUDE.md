@@ -68,6 +68,7 @@ The goal is a serious, almost bare-HTML document. Nothing that reads as AI-gener
 - Single prose column about 70 characters wide. Figures may be wider.
 - Fonts: system serif for text (Charter, Georgia fallback). `ui-monospace` for numbers and tables. No web fonts.
 - Colours: text `#1A1A1A` on `#F9F9F9`. Blue and orange only, and only to encode Cooperate and Defect.
+- Data that is not a move uses a single grey ramp from the neutrals, never a new hue. Heatmap: light grey (low) to `#1A1A1A` (high). Leaderboard bars: charcoal. Outcome distribution: Mutual Cooperation blue, Mutual Defection orange, Betrayal mid-grey. Cooperation-rate line: blue.
 - Underlined links. 1px rules.
 - Tailwind v4 with default colours, shadows, radii, and fonts disabled via `@theme { --color-*: initial; … }`. Only project tokens exist.
 - Native HTML controls only: checkboxes, `<input type="number">`, `<select>`, `<button>`. No component library.
