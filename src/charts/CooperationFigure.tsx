@@ -6,8 +6,9 @@ import { chartDefaults, COOPERATE_COLOR } from './theme.ts'
 
 const MARGIN = { top: 8, right: 16, bottom: 48, left: 56 }
 
-function percent(rate: number): string {
-  return `${(rate * 100).toFixed(1)}%`
+// Four decimal places: the table carries the exact numbers, which a 0.1% rounding would blur.
+function decimal(rate: number): string {
+  return rate.toFixed(4)
 }
 
 export function CooperationFigure({ report }: { report: TournamentReport }) {
@@ -47,7 +48,7 @@ export function CooperationFigure({ report }: { report: TournamentReport }) {
             {series[0].data.map(({ x, y }) => (
               <tr key={x}>
                 <td className="pr-4 text-right">{x}</td>
-                <td className="text-right">{percent(y)}</td>
+                <td className="text-right">{decimal(y)}</td>
               </tr>
             ))}
           </tbody>

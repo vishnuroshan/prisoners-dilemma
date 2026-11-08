@@ -78,7 +78,7 @@ export default function Tournament() {
           />
         </label>
         <button type="submit" className="border border-ink px-2">
-          Run
+          Run Tournament
         </button>
       </form>
 

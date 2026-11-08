@@ -5,7 +5,7 @@ import Tournament from './Tournament.tsx'
 
 afterEach(cleanup)
 
-const run = () => fireEvent.click(screen.getByRole('button', { name: 'Run' }))
+const run = () => fireEvent.click(screen.getByRole('button', { name: 'Run Tournament' }))
 const shownSeed = () => screen.getByText(/^Seed: \d+$/).textContent
 
 /** Every row of the figure's table of exact numbers, header row included. */
@@ -77,9 +77,9 @@ test('the cooperation rate figure tabulates the rate for each round', () => {
 
   expect(figureTableRows(/^Cooperation rate by round/)).toEqual([
     ['Round', 'Cooperation rate'],
-    ['1', '50.0%'],
-    ['2', '33.3%'],
-    ['3', '33.3%'],
+    ['1', '0.5000'],
+    ['2', '0.3333'],
+    ['3', '0.3333'],
   ])
 })
 
