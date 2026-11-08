@@ -20,28 +20,39 @@ function leaderboardRows() {
     )
 }
 
+/** Leaves only the named strategies ticked. */
+function tickOnly(...names: string[]) {
+  for (const checkbox of screen.getAllByRole<HTMLInputElement>('checkbox')) {
+    if (names.includes(checkbox.labels?.[0].textContent?.trim() ?? '')) continue
+    if (checkbox.checked) fireEvent.click(checkbox)
+  }
+}
+
 test('running with the defaults shows a leaderboard table ranked by score', () => {
   render(<Tournament />)
 
-  expect(screen.getByRole<HTMLInputElement>('checkbox', { name: 'Always Cooperate' }).checked).toBe(
-    true,
-  )
-  expect(screen.getByRole<HTMLInputElement>('checkbox', { name: 'Always Defect' }).checked).toBe(
-    true,
-  )
+  const checkboxes = screen.getAllByRole<HTMLInputElement>('checkbox')
+  expect(checkboxes.every((checkbox) => checkbox.checked)).toBe(true)
   expect(screen.getByRole<HTMLInputElement>('spinbutton', { name: 'Rounds' }).value).toBe('200')
   run()
 
-  expect(leaderboardRows()).toEqual([
-    ['1', 'Always Defect', '1200'],
-    ['2', 'Always Cooperate', '600'],
-  ])
+  const scores = leaderboardRows().map(([, , score]) => Number(score))
+  expect(scores).toHaveLength(checkboxes.length)
+  expect(scores).toEqual(scores.toSorted((a, b) => b - a))
+})
+
+test('offers the stochastic strategies', () => {
+  render(<Tournament />)
+
+  for (const name of ['Random', 'Joss', 'Forgiving Tit for Tat']) {
+    expect(screen.getByRole('checkbox', { name })).toBeDefined()
+  }
 })
 
 test('ticked strategies and rounds set the tournament', () => {
   render(<Tournament />)
 
-  fireEvent.click(screen.getByRole('checkbox', { name: 'Always Defect' }))
+  tickOnly('Always Cooperate')
   fireEvent.change(screen.getByRole('spinbutton', { name: 'Rounds' }), { target: { value: '10' } })
   run()
 
@@ -70,8 +81,7 @@ test('each run without an entered seed uses a fresh random seed', () => {
 test('an invalid config shows the error instead of results', () => {
   render(<Tournament />)
 
-  fireEvent.click(screen.getByRole('checkbox', { name: 'Always Cooperate' }))
-  fireEvent.click(screen.getByRole('checkbox', { name: 'Always Defect' }))
+  tickOnly()
   run()
 
   expect(screen.getByRole('alert').textContent).toBe('Select at least one strategy.')

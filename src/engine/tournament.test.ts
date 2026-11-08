@@ -86,7 +86,7 @@ describe('runTournament rejects an invalid config with a RangeError', () => {
 })
 
 describe('listStrategies', () => {
-  test('lists Always Cooperate and Always Defect as metadata only', () => {
+  test('lists every strategy as metadata only, in registry order', () => {
     expect(listStrategies()).toEqual([
       {
         id: 'always-cooperate',
@@ -100,6 +100,30 @@ describe('listStrategies', () => {
         origin: expect.any(String),
         description: expect.any(String),
       },
+      { id: 'random', name: 'Random', origin: expect.any(String), description: expect.any(String) },
+      { id: 'joss', name: 'Joss', origin: expect.any(String), description: expect.any(String) },
+      {
+        id: 'forgiving-tit-for-tat',
+        name: 'Forgiving Tit for Tat',
+        origin: expect.any(String),
+        description: expect.any(String),
+      },
     ])
+  })
+})
+
+describe('stochastic strategies', () => {
+  const config = {
+    strategyIds: [ALLC, ALLD, 'random', 'joss', 'forgiving-tit-for-tat'],
+    rounds: 200,
+    seed: 7,
+  }
+
+  test('the same seed gives an identical report', () => {
+    expect(runTournament(config)).toEqual(runTournament({ ...config }))
+  })
+
+  test('a different seed changes the report', () => {
+    expect(runTournament({ ...config, seed: 8 })).not.toEqual(runTournament(config))
   })
 })

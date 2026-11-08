@@ -1,3 +1,4 @@
+import { forgivingTitForTat, joss, random } from './stochasticStrategies.ts'
 import { COOPERATE, DEFECT, type Strategy } from './types.ts'
 
 const NOT_IN_AXELROD_1980 = "A baseline. It was not an entry in Axelrod's 1980 tournament."
@@ -21,4 +22,10 @@ export const alwaysDefect: Strategy<null> = {
 }
 
 /** Registry order is the canonical order: it fixes round-robin indexes and breaks score ties. */
-export const strategies: readonly Strategy[] = [alwaysCooperate, alwaysDefect]
+export const strategies: readonly Strategy[] = [
+  alwaysCooperate,
+  alwaysDefect,
+  random,
+  joss,
+  forgivingTitForTat,
+]
