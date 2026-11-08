@@ -19,6 +19,15 @@ describe('scoring', () => {
   })
 })
 
+describe('the opponent sees the Human', () => {
+  test("Tit for Tat copies the Human's previous move", () => {
+    let match = startHumanMatch({ opponentId: 'tit-for-tat', seed: 1 })
+    for (const move of ['D', 'C', 'D', 'D', 'C'] as const) match = playHumanMove(match, move)
+
+    expect(match.rounds.map(({ opponent }) => opponent)).toEqual(['C', 'D', 'C', 'D', 'D'])
+  })
+})
+
 /** Plays Cooperate until the match ends and returns the finished match. */
 function playToEnd(match: HumanMatch) {
   while (!match.over) match = playHumanMove(match, 'C')
