@@ -1,11 +1,14 @@
 import type { ReactNode } from 'react'
+import Introduction from './Introduction.tsx'
+import Payoffs from './Payoffs.tsx'
 import Play from './Play.tsx'
+import Strategies from './Strategies.tsx'
 import Tournament from './Tournament.tsx'
 
 const sections: { id: string; title: string; content?: ReactNode }[] = [
-  { id: 'introduction', title: 'Introduction' },
-  { id: 'payoffs', title: 'Payoffs' },
-  { id: 'strategies', title: 'Strategies' },
+  { id: 'introduction', title: 'Introduction', content: <Introduction /> },
+  { id: 'payoffs', title: 'Payoffs', content: <Payoffs /> },
+  { id: 'strategies', title: 'Strategies', content: <Strategies /> },
   { id: 'tournament', title: 'Tournament', content: <Tournament /> },
   { id: 'play', title: 'Play', content: <Play /> },
 ]
