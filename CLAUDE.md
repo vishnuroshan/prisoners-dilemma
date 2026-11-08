@@ -9,7 +9,7 @@ Pre-implementation. No source code, `package.json`, or tooling exists yet. Desig
 1. This file (decisions made after the spec was written; it wins on conflict).
 2. `docs/adr/` (architecture decisions with rationale).
 3. `GLOSSARY.md` (canonical domain terms; use them in code, UI copy, and tickets).
-4. `specs/prisoner_s_dilemma_web_app_specification (1).md` (original spec; left unedited).
+4. `specs/spec.md` (original spec; left unedited).
 
 Deferred features are Backlog drafts DRAFT-1 to DRAFT-7. Do not build them, but do not break the seams they rely on (see ADR 0001).
 
