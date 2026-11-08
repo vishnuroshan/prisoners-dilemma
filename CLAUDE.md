@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project state
 
-Walking skeleton: tooling, CI, and deploy config exist; the page shows section headings only and `src/engine/index.ts` is empty. Design inputs, in order of precedence:
+Walking skeleton: tooling, CI, and deploy config exist; the engine runs tournaments with ALLC and ALLD, and the page has a working Tournament section; other sections are headings only. Design inputs, in order of precedence:
 
 1. This file (decisions made after the spec was written; it wins on conflict).
 2. `docs/adr/` (architecture decisions with rationale).
