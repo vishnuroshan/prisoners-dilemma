@@ -2,19 +2,15 @@ import type { TournamentReport } from '../engine'
 import { leaderboardBars } from './adapters.ts'
 import { Figure } from './Figure.tsx'
 import { LeaderboardChart } from './lazyCharts.ts'
-import { horizontalBarHeight } from './theme.ts'
-
-const BAR_HEIGHT = 32
 
 export function LeaderboardFigure({ report }: { report: TournamentReport }) {
   const bars = leaderboardBars(report)
   return (
     <Figure
-      caption="Leaderboard: each strategy's total score across the tournament."
-      height={horizontalBarHeight(bars.length, BAR_HEIGHT)}
+      caption="Leaderboard: each strategy’s total score."
       chart={<LeaderboardChart bars={bars} />}
     >
-      <table className="mt-2 border-collapse font-mono">
+      <table className="border-collapse">
         <thead>
           <tr className="border-b border-ink">
             <th className="pr-4 text-left">Rank</th>

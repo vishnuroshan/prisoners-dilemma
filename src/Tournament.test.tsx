@@ -1,12 +1,13 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, expect, test } from 'vitest'
+import { axeViolations } from './testAxe.ts'
 import Tournament from './Tournament.tsx'
 
 afterEach(cleanup)
 
 const run = () => fireEvent.click(screen.getByRole('button', { name: 'Run Tournament' }))
-const shownSeed = () => screen.getByText(/^Seed: \d+$/).textContent
+const shownSeed = () => screen.getByRole('status').textContent?.match(/seed (\d+)\.$/)?.[1]
 
 /** Every row of the figure's table of exact numbers, header row included. */
 function figureTableRows(name: RegExp) {
@@ -25,6 +26,57 @@ function tickOnly(...names: string[]) {
     if (checkbox.checked) fireEvent.click(checkbox)
   }
 }
+
+test('before the first run, one line says to pick strategies and run', () => {
+  render(<Tournament />)
+
+  expect(
+    screen.getByText('Pick strategies, then press Run Tournament to fill these four charts.'),
+  ).toBeTruthy()
+  expect(screen.queryAllByRole('figure')).toEqual([])
+})
+
+test('a finished run is announced with its strategy count, rounds, and seed', () => {
+  render(<Tournament />)
+
+  tickOnly('Tit for Tat', 'Grudger')
+  fireEvent.change(screen.getByRole('spinbutton', { name: 'Rounds' }), { target: { value: '50' } })
+  fireEvent.change(screen.getByRole('spinbutton', { name: /Seed/ }), { target: { value: '7' } })
+  run()
+
+  expect(screen.getByRole('status').textContent).toBe(
+    'Tournament finished: 2 strategies, 50 rounds, seed 7.',
+  )
+})
+
+test('each figure’s Show numbers toggle swaps its chart for its table, which is always present', () => {
+  render(<Tournament />)
+  run()
+
+  const figure = screen.getByRole('figure', { name: /^Leaderboard/ })
+  const toggle = within(figure).getByRole('button', { name: 'Show numbers' })
+  expect(toggle.getAttribute('aria-pressed')).toBe('false')
+  expect(within(figure).getByRole('table')).toBeTruthy()
+
+  fireEvent.click(toggle)
+  expect(toggle.getAttribute('aria-pressed')).toBe('true')
+  expect(within(figure).getByRole('table')).toBeTruthy()
+  const other = screen.getByRole('figure', { name: /^Outcome distribution/ })
+  expect(
+    within(other).getByRole('button', { name: 'Show numbers' }).getAttribute('aria-pressed'),
+  ).toBe('false')
+
+  fireEvent.click(toggle)
+  expect(toggle.getAttribute('aria-pressed')).toBe('false')
+})
+
+test('the results have no axe violations', async () => {
+  const { container } = render(<Tournament />)
+  run()
+  fireEvent.click(within(screen.getByRole('figure', { name: /^Cooperation/ })).getByRole('button'))
+
+  expect(await axeViolations(container)).toEqual([])
+})
 
 test('running with the defaults shows a leaderboard table ranked by score', () => {
   render(<Tournament />)
@@ -114,7 +166,7 @@ test('an entered seed is used and shown with the results', () => {
   fireEvent.change(screen.getByRole('spinbutton', { name: /Seed/ }), { target: { value: '42' } })
   run()
 
-  expect(shownSeed()).toBe('Seed: 42')
+  expect(shownSeed()).toBe('42')
 })
 
 test('each run without an entered seed uses a fresh random seed', () => {

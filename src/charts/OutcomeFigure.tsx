@@ -2,20 +2,16 @@ import type { TournamentReport } from '../engine'
 import { outcomeBars } from './adapters.ts'
 import { Figure } from './Figure.tsx'
 import { OutcomeChart } from './lazyCharts.ts'
-import { horizontalBarHeight } from './theme.ts'
-
-const BAR_HEIGHT = 40
 
 export function OutcomeFigure({ report }: { report: TournamentReport }) {
   const bars = outcomeBars(report)
   const total = bars.reduce((sum, { rounds }) => sum + rounds, 0)
   return (
     <Figure
-      caption="Outcome distribution: how many rounds, across every match, ended in Mutual Cooperation, Mutual Defection, or Betrayal."
-      height={horizontalBarHeight(bars.length, BAR_HEIGHT)}
+      caption="Outcome distribution: rounds ending in each Outcome."
       chart={<OutcomeChart bars={bars} />}
     >
-      <table className="mt-2 border-collapse font-mono">
+      <table className="border-collapse">
         <thead>
           <tr className="border-b border-ink">
             <th className="pr-4 text-left">Outcome</th>

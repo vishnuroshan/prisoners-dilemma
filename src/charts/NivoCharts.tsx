@@ -18,7 +18,6 @@ import {
   HEATMAP_MARGIN,
   horizontalBarDefaults,
   INK,
-  PAPER,
   topDown,
 } from './theme.ts'
 
@@ -35,8 +34,9 @@ export function LeaderboardChart({ bars }: { bars: LeaderboardBar[] }) {
   )
 }
 
-// The lowest score is light grey rather than paper, so it stays visible against the page.
-const LOWEST_SHADE = 0.1
+// The lowest score is mid-grey rather than paper, so every cell keeps 3:1 contrast against the
+// page (WCAG 1.4.11 non-text contrast).
+const LOWEST_SHADE = 0.48
 
 export function PairwiseChart({ rows }: { rows: PairwiseRow[] }) {
   const scores = rows.flatMap((row) => row.data.map((cell) => cell.y))
@@ -51,7 +51,8 @@ export function PairwiseChart({ rows }: { rows: PairwiseRow[] }) {
       axisTop={{ tickSize: 0, tickPadding: 6, tickRotation: -45 }}
       axisLeft={{ tickSize: 0, tickPadding: 6 }}
       colors={(cell) => grey(LOWEST_SHADE + (1 - LOWEST_SHADE) * level(cell.value))}
-      labelTextColor={(cell) => (level(cell.value) > 0.5 ? PAPER : INK)}
+      // A quadrant's cells are too small for legible numbers; Show numbers gives the exact values.
+      enableLabels={false}
     />
   )
 }
@@ -78,10 +79,11 @@ export function CooperationChart({ series }: { series: CooperationSerie[] }) {
 }
 
 // Betrayal mixes both moves, so it takes mid-grey from the neutral ramp (CLAUDE.md UI rules).
+// 0.65 rather than 0.5 so the paper-coloured bar label keeps WCAG AA contrast (4.5:1).
 const OUTCOME_COLOURS: Record<OutcomeName, string> = {
   'Mutual Cooperation': COOPERATE_COLOR,
   'Mutual Defection': DEFECT_COLOR,
-  Betrayal: grey(0.5),
+  Betrayal: grey(0.65),
 }
 
 export function OutcomeChart({ bars }: { bars: OutcomeBar[] }) {

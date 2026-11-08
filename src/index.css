@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* Only project tokens exist: default colours, shadows, radii, blur, and fonts are cleared (CLAUDE.md UI rules). */
+/* Only project tokens exist: default colours, shadows, radii, blur, fonts, and type sizes are cleared (CLAUDE.md UI rules). */
 @theme {
   --color-*: initial;
   --shadow-*: initial;
@@ -10,19 +10,37 @@
   --radius-*: initial;
   --blur-*: initial;
   --font-*: initial;
+  --text-*: initial;
 
   --color-ink: #1a1a1a;
   --color-paper: #f9f9f9;
+  /* Secondary text and inactive links. 6.3:1 on paper, above WCAG AA 4.5:1. */
+  --color-muted: #5c5c5c;
+  /* The marked matrix cell. Ink on it is 14:1. */
+  --color-mark: #e2e2e2;
   /* Blue and orange encode Cooperate and Defect only. Both pass WCAG AA (4.5:1) as text on paper. */
   --color-cooperate: #2f5d8a;
   --color-defect: #b3501b;
 
   --font-serif: Charter, Georgia, serif;
-  --font-mono: ui-monospace, monospace;
   --default-font-family: var(--font-serif);
-  --default-mono-font-family: var(--font-mono);
+  /* No monospace anywhere: kbd and code fall back to the serif too. */
+  --default-mono-font-family: var(--font-serif);
+
+  /* Type scale. Line heights are whole pixels so stacked rows do not leave sub-pixel seams. */
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.75rem;
+  --text-xl--line-height: 2.25rem;
+  --text-display: clamp(2rem, 3.4vw, 3.25rem);
+  --text-display--line-height: 1;
 
   --container-text: 70ch;
+  --container-page: 90rem;
 }
 
 @layer base {
@@ -32,5 +50,17 @@
 
   a {
     @apply underline;
+  }
+
+  table,
+  input,
+  select,
+  button {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
   }
 }
