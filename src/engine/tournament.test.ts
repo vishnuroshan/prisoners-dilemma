@@ -1,0 +1,105 @@
+import { describe, expect, test } from 'vitest'
+import { listStrategies, runTournament } from './index.ts'
+
+const ALLC = 'always-cooperate'
+const ALLD = 'always-defect'
+
+function scores(strategyIds: string[], rounds: number) {
+  const { leaderboard } = runTournament({ strategyIds, rounds, seed: 1 })
+  return Object.fromEntries(leaderboard.map((entry) => [entry.strategyId, entry.score]))
+}
+
+/** A's score in its match against B: the tournament total minus A's self-match. */
+function matchScore(a: string, b: string, rounds: number) {
+  return scores([a, b], rounds)[a] - scores([a], rounds)[a]
+}
+
+describe('payoffs', () => {
+  test('Mutual Cooperation pays Reward (3)', () => {
+    expect(scores([ALLC], 1)[ALLC]).toBe(3)
+  })
+
+  test('Mutual Defection pays Punishment (1)', () => {
+    expect(scores([ALLD], 1)[ALLD]).toBe(1)
+  })
+
+  test('Betrayal pays the defector Temptation (5)', () => {
+    expect(matchScore(ALLD, ALLC, 1)).toBe(5)
+  })
+
+  test("Betrayal pays the cooperator the Sucker's payoff (0)", () => {
+    expect(matchScore(ALLC, ALLD, 1)).toBe(0)
+  })
+})
+
+describe('runTournament', () => {
+  test('a 200-round Always Cooperate vs Always Defect match scores 0 vs 1000', () => {
+    expect(matchScore(ALLC, ALLD, 200)).toBe(0)
+    expect(matchScore(ALLD, ALLC, 200)).toBe(1000)
+  })
+
+  test('a self-match counts one side only', () => {
+    expect(scores([ALLC], 200)[ALLC]).toBe(600)
+  })
+
+  test('the leaderboard ranks by total score, highest first', () => {
+    const { leaderboard } = runTournament({ strategyIds: [ALLC, ALLD], rounds: 200, seed: 1 })
+    expect(leaderboard).toEqual([
+      { strategyId: ALLD, name: 'Always Defect', score: 1200 },
+      { strategyId: ALLC, name: 'Always Cooperate', score: 600 },
+    ])
+  })
+
+  test('the same config gives an identical report', () => {
+    const config = { strategyIds: [ALLC, ALLD], rounds: 137, seed: 4_294_967_295 }
+    expect(runTournament(config)).toEqual(runTournament({ ...config }))
+  })
+
+  test('the order of the selected strategy ids does not change the report', () => {
+    expect(runTournament({ strategyIds: [ALLD, ALLC], rounds: 50, seed: 9 })).toEqual(
+      runTournament({ strategyIds: [ALLC, ALLD], rounds: 50, seed: 9 }),
+    )
+  })
+})
+
+describe('runTournament rejects an invalid config with a RangeError', () => {
+  const valid = { strategyIds: [ALLC, ALLD], rounds: 200, seed: 1 }
+
+  test.each([
+    ['empty selection', { strategyIds: [] }],
+    ['unknown strategy id', { strategyIds: [ALLC, 'tit-for-tat-typo'] }],
+    ['duplicate strategy id', { strategyIds: [ALLC, ALLC] }],
+    ['0 rounds', { rounds: 0 }],
+    ['1,001 rounds', { rounds: 1001 }],
+    ['fractional rounds', { rounds: 2.5 }],
+    ['NaN rounds', { rounds: Number.NaN }],
+    ['negative seed', { seed: -1 }],
+    ['seed above 2^32 - 1', { seed: 2 ** 32 }],
+    ['fractional seed', { seed: 0.5 }],
+  ])('%s', (_, override) => {
+    expect(() => runTournament({ ...valid, ...override })).toThrow(RangeError)
+  })
+
+  test.each([1, 1000])('accepts %i rounds', (rounds) => {
+    expect(() => runTournament({ ...valid, rounds })).not.toThrow()
+  })
+})
+
+describe('listStrategies', () => {
+  test('lists Always Cooperate and Always Defect as metadata only', () => {
+    expect(listStrategies()).toEqual([
+      {
+        id: 'always-cooperate',
+        name: 'Always Cooperate',
+        origin: expect.any(String),
+        description: expect.any(String),
+      },
+      {
+        id: 'always-defect',
+        name: 'Always Defect',
+        origin: expect.any(String),
+        description: expect.any(String),
+      },
+    ])
+  })
+})

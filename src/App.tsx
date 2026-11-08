@@ -1,8 +1,11 @@
-const sections = [
+import type { ReactNode } from 'react'
+import Tournament from './Tournament.tsx'
+
+const sections: { id: string; title: string; content?: ReactNode }[] = [
   { id: 'introduction', title: 'Introduction' },
   { id: 'payoffs', title: 'Payoffs' },
   { id: 'strategies', title: 'Strategies' },
-  { id: 'tournament', title: 'Tournament' },
+  { id: 'tournament', title: 'Tournament', content: <Tournament /> },
   { id: 'play', title: 'Play' },
 ]
 
@@ -24,9 +27,10 @@ export default function App() {
         </ol>
       </nav>
 
-      {sections.map(({ id, title }) => (
+      {sections.map(({ id, title, content }) => (
         <section key={id} id={id} className="mt-12">
           <h2 className="text-xl">{title}</h2>
+          {content}
         </section>
       ))}
     </main>
